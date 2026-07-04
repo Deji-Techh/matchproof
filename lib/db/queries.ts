@@ -95,7 +95,11 @@ export async function getVerificationResults() {
 export async function getReplayData() {
   await ensureDemoData();
   const fixtures = await getFixtures();
-  const activeFixture = fixtures[0] ?? null;
+  const activeFixture =
+    fixtures.find((fixture) => fixture.status === "live") ??
+    fixtures.find((fixture) => fixture.updates.length > 0) ??
+    fixtures[0] ??
+    null;
   const fixture = activeFixture ? await getFixtureMonitor(activeFixture.fixtureId) : null;
   return { fixtures, fixture };
 }

@@ -24,7 +24,7 @@ export function SignalAcknowledgeButton({ signalId }: { signalId: string }) {
       disabled={pending}
       onClick={acknowledge}
       title="Acknowledge signal"
-      className="rounded border border-[var(--border-subtle)] p-2 hover:border-[var(--border-strong)] disabled:opacity-50"
+      className="interactive-panel grid min-h-10 min-w-10 place-items-center border border-[var(--border-subtle)] p-2 disabled:opacity-50"
     >
       <CheckCircle2 className="h-4 w-4" />
     </button>

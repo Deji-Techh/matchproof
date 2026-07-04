@@ -50,10 +50,10 @@ export function IngestionControls({ fixtureId }: { fixtureId?: string }) {
   const disabled = state.status === "pending";
 
   return (
-    <section className="panel rounded-md p-4">
+    <section className="panel-strong p-4">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
-          <h2 className="text-sm font-semibold">TxLINE Ingestion</h2>
+          <h2 className="text-sm font-black uppercase">TxLINE Ingestion</h2>
           <p className="mt-1 text-xs text-[var(--text-secondary)]">
             Credentials stay server-side; failed live calls create audit evidence.
           </p>
@@ -62,7 +62,7 @@ export function IngestionControls({ fixtureId }: { fixtureId?: string }) {
           {state.status}
         </StatusBadge>
       </div>
-      <div className="mt-4 flex flex-wrap items-center gap-2">
+      <div className="mt-4 grid gap-2 sm:flex sm:flex-wrap sm:items-center">
         <ControlButton disabled={disabled} icon={CalendarSync} label="Sync fixtures" onClick={() => run("fixtures")} />
         <ControlButton disabled={disabled || !fixtureId} icon={RefreshCcw} label="Score snapshot" onClick={() => run("snapshot")} />
         <ControlButton disabled={disabled || !fixtureId} icon={DatabaseZap} label="Recent updates" onClick={() => run("updates")} />
@@ -91,7 +91,7 @@ function ControlButton({
       type="button"
       disabled={disabled}
       onClick={onClick}
-      className="inline-flex items-center gap-2 rounded border border-[var(--border-subtle)] bg-[var(--bg-elevated)] px-3 py-2 text-sm hover:border-[var(--border-strong)] disabled:cursor-not-allowed disabled:opacity-50"
+      className="interactive-panel inline-flex min-h-10 items-center justify-center gap-2 border border-[var(--border-subtle)] bg-[var(--bg-elevated)] px-3 py-2 text-sm font-semibold disabled:cursor-not-allowed disabled:opacity-50"
     >
       <Icon className="h-4 w-4" />
       {label}

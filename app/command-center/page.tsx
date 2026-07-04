@@ -7,6 +7,7 @@ import { AuditLogTable } from "@/components/tables/audit-log-table";
 import { DataFlowPanel } from "@/components/cards/data-flow-panel";
 import { IngestionControls } from "@/components/cards/ingestion-controls";
 import { ExportJsonButton } from "@/components/export/export-json-button";
+import { PageHeader, SectionShell } from "@/components/ui/page-header";
 import { getCommandCenterData } from "@/lib/db/queries";
 import { DEMO_MODE_LABEL } from "@/lib/demo-data";
 import { formatDateTime } from "@/lib/utils";
@@ -15,16 +16,19 @@ export const dynamic = "force-dynamic";
 
 export default async function CommandCenterPage() {
   const data = await getCommandCenterData();
+  const ingestFixture = data.fixtures.find((fixture) => fixture.status === "live") ?? data.fixtures.find((fixture) => fixture.updates.length > 0);
 
   return (
     <main className="space-y-5">
       <PageHeader
+        icon={Radio}
+        eyebrow="Live operations"
         title="Command Center"
         detail="Live and replayable operational state for TxLINE World Cup fixture and score data."
       >
         <ExportJsonButton />
       </PageHeader>
-      <section className="panel rounded-md border-[var(--warning)]/30 p-3 text-sm text-yellow-100">
+      <section className="panel reveal-up border-[var(--warning)]/30 p-4 text-sm text-yellow-100">
         <StatusBadge variant="warning">{DEMO_MODE_LABEL}</StatusBadge>
         <span className="ml-3 text-[var(--text-secondary)]">
           Seeded fallback data is active until TxLINE credentials are configured.
@@ -37,42 +41,21 @@ export default async function CommandCenterPage() {
       </section>
       <section className="grid gap-4 xl:grid-cols-[1fr_420px]">
         <DataFlowPanel />
-        <IngestionControls fixtureId={data.fixtures[0]?.fixtureId} />
+        <IngestionControls fixtureId={ingestFixture?.fixtureId} />
       </section>
       <section className="grid gap-4 md:grid-cols-2">
         <MetricCard title="Fixtures" value={data.fixtures.length} detail="Stored fixture rows" icon={Database} tone="neutral" />
         <MetricCard title="Score Updates" value={data.updateCount} detail="Stored source updates" icon={Activity} tone="success" />
       </section>
-      <Section title="Fixture Overview">
+      <SectionShell title="Fixture Overview">
         <FixtureTable fixtures={data.fixtures} />
-      </Section>
-      <Section title="Recent Signals">
+      </SectionShell>
+      <SectionShell title="Recent Signals">
         <SignalTable signals={data.signals} />
-      </Section>
-      <Section title="Audit Preview">
+      </SectionShell>
+      <SectionShell title="Audit Preview">
         <AuditLogTable logs={data.auditLogs} />
-      </Section>
+      </SectionShell>
     </main>
-  );
-}
-
-function PageHeader({ title, detail, children }: { title: string; detail: string; children?: React.ReactNode }) {
-  return (
-    <header className="flex flex-wrap items-start justify-between gap-3">
-      <div>
-        <h1 className="text-2xl font-semibold">{title}</h1>
-        <p className="mt-1 text-sm text-[var(--text-secondary)]">{detail}</p>
-      </div>
-      {children}
-    </header>
-  );
-}
-
-function Section({ title, children }: { title: string; children: React.ReactNode }) {
-  return (
-    <section className="space-y-3">
-      <h2 className="text-sm font-medium uppercase text-[var(--text-muted)]">{title}</h2>
-      {children}
-    </section>
   );
 }

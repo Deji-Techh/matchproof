@@ -28,6 +28,10 @@
 - [x] Command Center evidence-flow panel
 - [x] Command Center ingestion controls
 - [x] Render deployment
+- [x] Public landing page
+- [x] Match-state ticker for previous, current, and upcoming fixtures
+- [x] Responsive mobile layout pass
+- [x] Reference video asset integrated into landing page
 
 ## In Progress
 
@@ -50,6 +54,7 @@ None.
 - Build: Passed - `DATABASE_URL="file:./dev.db" npm run build`
 - Tests: Passed - `DATABASE_URL="file:./dev.db" npm test`
 - Browser: Passed - `DATABASE_URL="file:./dev.db" npm run test:browser`
+- Mobile Screenshots: Passed - Playwright screenshots at `390x844` for landing, Command Center, and Match Monitor
 - Prisma: Passed - `DATABASE_URL="file:./dev.db" npx prisma validate && DATABASE_URL="file:./dev.db" npx prisma migrate status`
 - Audit: Passed - `npm audit --audit-level=moderate`
 - React Doctor: Passed - 100/100, no issues found

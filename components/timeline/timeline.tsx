@@ -25,9 +25,9 @@ export function Timeline({
       {items.map((entry) => {
         const Icon = entry.type === "update" ? Radio : entry.type === "signal" ? Siren : ShieldCheck;
         return (
-          <article key={`${entry.type}-${entry.item.id}`} className="panel rounded-md p-4">
+          <article key={`${entry.type}-${entry.item.id}`} className="panel interactive-panel p-4">
             <div className="flex items-start gap-3">
-              <div className="rounded border border-[var(--border-subtle)] bg-[var(--bg-elevated)] p-2">
+              <div className="border border-[var(--border-subtle)] bg-[var(--bg-elevated)] p-2">
                 <Icon className="h-4 w-4 text-[var(--info)]" />
               </div>
               <div className="min-w-0 flex-1">
@@ -52,7 +52,7 @@ export function Timeline({
                   <div className="mt-3">
                     <div className="flex items-center gap-2">
                       <SeverityBadge severity={entry.item.severity} />
-                      <h3 className="font-medium">{entry.item.title}</h3>
+                      <h3 className="font-black">{entry.item.title}</h3>
                     </div>
                     <p className="mt-2 text-sm text-[var(--text-secondary)]">{entry.item.summary}</p>
                     <div className="mt-3">

@@ -54,13 +54,13 @@ export function ReplayControls({
   }
 
   return (
-    <div className="panel rounded-md p-4">
+    <div className="panel-strong track-line p-4 pt-7">
       <div className="flex flex-wrap items-center justify-between gap-3">
-        <div className="flex flex-wrap items-center gap-2">
+        <div className="flex w-full flex-wrap items-center gap-2 lg:w-auto">
           <button
             disabled={pending}
             onClick={() => postReplay(status === "paused" ? "resume" : "start")}
-            className="rounded border border-[var(--border-subtle)] p-2 hover:border-[var(--border-strong)] disabled:opacity-50"
+            className="interactive-panel grid min-h-10 min-w-10 place-items-center border border-[var(--border-subtle)] p-2 disabled:opacity-50"
             title={status === "paused" ? "Resume replay" : "Start replay"}
             type="button"
           >
@@ -69,7 +69,7 @@ export function ReplayControls({
           <button
             disabled={pending}
             onClick={() => postReplay("pause")}
-            className="rounded border border-[var(--border-subtle)] p-2 hover:border-[var(--border-strong)] disabled:opacity-50"
+            className="interactive-panel grid min-h-10 min-w-10 place-items-center border border-[var(--border-subtle)] p-2 disabled:opacity-50"
             title="Pause replay"
             type="button"
           >
@@ -78,7 +78,7 @@ export function ReplayControls({
           <button
             disabled={pending}
             onClick={() => postReplay("reset")}
-            className="rounded border border-[var(--border-subtle)] p-2 hover:border-[var(--border-strong)] disabled:opacity-50"
+            className="interactive-panel grid min-h-10 min-w-10 place-items-center border border-[var(--border-subtle)] p-2 disabled:opacity-50"
             title="Reset replay"
             type="button"
           >
@@ -87,7 +87,7 @@ export function ReplayControls({
           <button
             disabled={pending || status === "completed"}
             onClick={() => postReplay("step")}
-            className="rounded border border-[var(--border-subtle)] p-2 hover:border-[var(--border-strong)] disabled:opacity-50"
+            className="interactive-panel grid min-h-10 min-w-10 place-items-center border border-[var(--border-subtle)] p-2 disabled:opacity-50"
             title="Advance replay"
             type="button"
           >
@@ -96,7 +96,7 @@ export function ReplayControls({
           <button
             disabled={pending}
             onClick={() => postReplay("reset")}
-            className="rounded border border-[var(--border-subtle)] p-2 hover:border-[var(--border-strong)] disabled:opacity-50"
+            className="interactive-panel grid min-h-10 min-w-10 place-items-center border border-[var(--border-subtle)] p-2 disabled:opacity-50"
             title="Clear session"
             type="button"
           >
@@ -105,7 +105,7 @@ export function ReplayControls({
           <select
             value={speed}
             onChange={(event) => setSpeed(Number(event.target.value))}
-            className="rounded border border-[var(--border-subtle)] bg-[var(--bg-elevated)] px-3 py-2 text-sm"
+            className="min-h-10 border border-[var(--border-subtle)] bg-[var(--bg-elevated)] px-3 py-2 text-sm"
           >
             {REPLAY_SPEEDS.map((speed) => (
               <option key={speed} value={speed}>
@@ -114,7 +114,7 @@ export function ReplayControls({
             ))}
           </select>
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex flex-wrap items-center gap-2">
           <StatusBadge variant={status === "running" ? "success" : status === "paused" ? "warning" : "neutral"}>{status}</StatusBadge>
           <span className="text-xs text-[var(--text-secondary)]">
             {message} · {currentIndex}/{totalEvents} events

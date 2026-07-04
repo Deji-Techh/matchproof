@@ -23,6 +23,9 @@ MatchProof provides an operator console for TxLINE fixture and score feeds. It f
 ## Key Features
 
 - Status: Implemented - documented TxLINE client methods for fixture, score, historical, stream, and validation flows
+- Status: Implemented - public landing page with video-backed product introduction
+- Status: Implemented - responsive console redesign for desktop and mobile viewports
+- Status: Implemented - match-state ticker showing previous results, current monitored matches, and upcoming fixtures from stored fixture data
 - Status: Implemented - operator-triggered fixture and score ingestion routes with audit events
 - Status: Implemented - Prisma schema and SQLite demo seed
 - Status: Implemented - deterministic Feed Health Agent
@@ -155,6 +158,8 @@ DEMO MODE - SEEDED FALLBACK DATA
 
 Seeded data is never presented as live TxLINE data or real Solana verification.
 
+The seeded demo includes previous, current, and upcoming fixture rows so the match-state ticker and fixture views can be evaluated without live TxLINE credentials.
+
 ## Testing
 
 Status: Implemented
@@ -166,6 +171,8 @@ DATABASE_URL="file:./dev.db" npm test
 DATABASE_URL="file:./dev.db" npm run test:browser
 DATABASE_URL="file:./dev.db" npm run build
 ```
+
+Mobile visual checks are performed with Playwright screenshots at `390x844` for the landing page, Command Center, and Match Monitor.
 
 ## Deployment
 

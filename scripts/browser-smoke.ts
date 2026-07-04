@@ -20,20 +20,21 @@ async function main() {
     pageErrors.push(error.message);
   });
 
-const routes = [
-  ["/command-center", "Command Center"],
-  ["/fixtures", "Fixtures"],
-  ["/fixtures/mp-demo-fixture-001", "Japan vs Croatia"],
-  ["/signals", "Signals"],
-  ["/proof-console", "Proof Console"],
-  ["/replay-lab", "Replay Lab"],
-  ["/audit-log", "Audit Log"],
-  ["/settings", "Settings"],
-] as const;
+  const routes = [
+    ["/", "Autonomous verification"],
+    ["/command-center", "Command Center"],
+    ["/fixtures", "Fixtures"],
+    ["/fixtures/mp-demo-fixture-001", "Japan vs Croatia"],
+    ["/signals", "Signals"],
+    ["/proof-console", "Proof Console"],
+    ["/replay-lab", "Replay Lab"],
+    ["/audit-log", "Audit Log"],
+    ["/settings", "Settings"],
+  ] as const;
 
-for (const [route, text] of routes) {
+  for (const [route, text] of routes) {
     await page.goto(`${baseUrl}${route}`, { waitUntil: "networkidle" });
-    await page.getByText(text, { exact: false }).first().waitFor({ state: "visible", timeout: 10_000 });
+    await page.locator("main").getByText(text, { exact: false }).first().waitFor({ state: "visible", timeout: 10_000 });
   }
 
   await page.goto(`${baseUrl}/replay-lab`, { waitUntil: "networkidle" });

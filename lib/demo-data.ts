@@ -23,9 +23,91 @@ export const demoFixture = {
   },
 };
 
+export const demoFixtures = [
+  {
+    fixtureId: "mp-demo-fixture-000",
+    competitionId: "world-cup-demo",
+    participant1: "Morocco",
+    participant2: "Portugal",
+    participant1IsHome: true,
+    startTime: "2026-07-04T12:00:00.000Z",
+    status: "completed",
+    raw: {
+      FixtureId: "mp-demo-fixture-000",
+      CompetitionId: "world-cup-demo",
+      Participant1: "Morocco",
+      Participant2: "Portugal",
+      Participant1IsHome: true,
+      StartTime: "2026-07-04T12:00:00.000Z",
+      Status: "completed",
+      demoMode: true,
+      label: DEMO_MODE_LABEL,
+    },
+  },
+  demoFixture,
+  {
+    fixtureId: "mp-demo-fixture-002",
+    competitionId: "world-cup-demo",
+    participant1: "Brazil",
+    participant2: "Serbia",
+    participant1IsHome: true,
+    startTime: "2026-07-04T19:00:00.000Z",
+    status: "upcoming",
+    raw: {
+      FixtureId: "mp-demo-fixture-002",
+      CompetitionId: "world-cup-demo",
+      Participant1: "Brazil",
+      Participant2: "Serbia",
+      Participant1IsHome: true,
+      StartTime: "2026-07-04T19:00:00.000Z",
+      Status: "upcoming",
+      demoMode: true,
+      label: DEMO_MODE_LABEL,
+    },
+  },
+  {
+    fixtureId: "mp-demo-fixture-003",
+    competitionId: "world-cup-demo",
+    participant1: "England",
+    participant2: "USA",
+    participant1IsHome: true,
+    startTime: "2026-07-04T21:00:00.000Z",
+    status: "upcoming",
+    raw: {
+      FixtureId: "mp-demo-fixture-003",
+      CompetitionId: "world-cup-demo",
+      Participant1: "England",
+      Participant2: "USA",
+      Participant1IsHome: true,
+      StartTime: "2026-07-04T21:00:00.000Z",
+      Status: "upcoming",
+      demoMode: true,
+      label: DEMO_MODE_LABEL,
+    },
+  },
+];
+
 export const demoFeedUpdates = [
   {
+    id: "demo-update-000",
+    fixtureId: "mp-demo-fixture-000",
+    sequence: "9001",
+    providerTimestamp: "2026-07-04T13:55:00.000Z",
+    ingestedAt: "2026-07-04T13:55:04.000Z",
+    sourceMode: "seed",
+    raw: {
+      fixtureId: "mp-demo-fixture-000",
+      seq: 9001,
+      status: "full_time",
+      period: "FT",
+      score: { listedHome: 2, listedAway: 1 },
+      providerTimestamp: "2026-07-04T13:55:00.000Z",
+      label: DEMO_MODE_LABEL,
+    },
+  },
+  {
     id: "demo-update-001",
+    fixtureId: demoFixture.fixtureId,
     sequence: "1001",
     providerTimestamp: "2026-07-04T15:00:05.000Z",
     ingestedAt: "2026-07-04T15:00:06.000Z",
@@ -42,6 +124,7 @@ export const demoFeedUpdates = [
   },
   {
     id: "demo-update-002",
+    fixtureId: demoFixture.fixtureId,
     sequence: "1002",
     providerTimestamp: "2026-07-04T15:18:11.000Z",
     ingestedAt: "2026-07-04T15:18:12.000Z",
@@ -59,6 +142,7 @@ export const demoFeedUpdates = [
   },
   {
     id: "demo-update-003",
+    fixtureId: demoFixture.fixtureId,
     sequence: "1002",
     providerTimestamp: "2026-07-04T15:18:11.000Z",
     ingestedAt: "2026-07-04T15:18:14.000Z",
@@ -76,6 +160,7 @@ export const demoFeedUpdates = [
   },
   {
     id: "demo-update-004",
+    fixtureId: demoFixture.fixtureId,
     sequence: "1003",
     providerTimestamp: "2026-07-04T15:47:00.000Z",
     ingestedAt: "2026-07-04T15:47:02.000Z",
@@ -92,6 +177,7 @@ export const demoFeedUpdates = [
   },
   {
     id: "demo-update-005",
+    fixtureId: demoFixture.fixtureId,
     sequence: "1004",
     providerTimestamp: "2026-07-04T16:09:20.000Z",
     ingestedAt: "2026-07-04T16:11:45.000Z",

@@ -11,10 +11,10 @@ const nodes = [
 
 export function DataFlowPanel() {
   return (
-    <section className="panel rounded-md p-4">
+    <section className="panel-strong track-line p-4 pt-7">
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div>
-          <h2 className="flex items-center gap-2 text-sm font-semibold">
+          <h2 className="flex items-center gap-2 text-sm font-black uppercase">
             <Archive className="h-4 w-4 text-[var(--info)]" />
             Evidence Flow
           </h2>
@@ -26,10 +26,10 @@ export function DataFlowPanel() {
         {nodes.map((node, index) => {
           const Icon = node.icon;
           return (
-            <div key={node.label} className="relative rounded-md border border-[var(--border-subtle)] bg-[var(--bg-elevated)] p-3">
+            <div key={node.label} className="interactive-panel relative border border-[var(--border-subtle)] bg-[var(--bg-elevated)] p-3">
               <div className="flex items-center gap-2">
                 <Icon className={`h-4 w-4 ${node.tone}`} />
-                <span className="text-sm font-medium">{node.label}</span>
+                <span className="text-sm font-black">{node.label}</span>
               </div>
               <p className="mt-2 text-xs text-[var(--text-secondary)]">{node.detail}</p>
               {index < nodes.length - 1 && (

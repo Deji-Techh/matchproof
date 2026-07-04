@@ -3,6 +3,7 @@ import {
   demoAuditLogs,
   demoFeedUpdates,
   demoFixture,
+  demoFixtures,
   demoSignals,
   demoVerification,
 } from "@/lib/demo-data";
@@ -12,35 +13,40 @@ let seeded = false;
 export async function ensureDemoData() {
   if (seeded) return;
 
-  const fixture = await prisma.fixture.upsert({
-    where: { fixtureId: demoFixture.fixtureId },
-    update: {
-      competitionId: demoFixture.competitionId,
-      participant1: demoFixture.participant1,
-      participant2: demoFixture.participant2,
-      participant1IsHome: demoFixture.participant1IsHome,
-      startTime: new Date(demoFixture.startTime),
-      status: demoFixture.status,
-      rawJson: JSON.stringify(demoFixture.raw, null, 2),
-    },
-    create: {
-      fixtureId: demoFixture.fixtureId,
-      competitionId: demoFixture.competitionId,
-      participant1: demoFixture.participant1,
-      participant2: demoFixture.participant2,
-      participant1IsHome: demoFixture.participant1IsHome,
-      startTime: new Date(demoFixture.startTime),
-      status: demoFixture.status,
-      rawJson: JSON.stringify(demoFixture.raw, null, 2),
-    },
-  });
+  const fixtures = await Promise.all(
+    demoFixtures.map((item) =>
+      prisma.fixture.upsert({
+        where: { fixtureId: item.fixtureId },
+        update: {
+          competitionId: item.competitionId,
+          participant1: item.participant1,
+          participant2: item.participant2,
+          participant1IsHome: item.participant1IsHome,
+          startTime: new Date(item.startTime),
+          status: item.status,
+          rawJson: JSON.stringify(item.raw, null, 2),
+        },
+        create: {
+          fixtureId: item.fixtureId,
+          competitionId: item.competitionId,
+          participant1: item.participant1,
+          participant2: item.participant2,
+          participant1IsHome: item.participant1IsHome,
+          startTime: new Date(item.startTime),
+          status: item.status,
+          rawJson: JSON.stringify(item.raw, null, 2),
+        },
+      }),
+    ),
+  );
+  const fixture = fixtures.find((item) => item.fixtureId === demoFixture.fixtureId) ?? fixtures[0];
 
   await Promise.all(
     demoFeedUpdates.map((update) =>
       prisma.feedUpdate.upsert({
       where: { id: update.id },
       update: {
-        fixtureId: fixture.fixtureId,
+        fixtureId: update.fixtureId ?? fixture.fixtureId,
         sourceType: "scores",
         sourceMode: update.sourceMode,
         endpoint: "/api/scores/stream",
@@ -51,7 +57,7 @@ export async function ensureDemoData() {
       },
       create: {
         id: update.id,
-        fixtureId: fixture.fixtureId,
+        fixtureId: update.fixtureId ?? fixture.fixtureId,
         sourceType: "scores",
         sourceMode: update.sourceMode,
         endpoint: "/api/scores/stream",

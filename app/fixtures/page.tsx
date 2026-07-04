@@ -1,6 +1,7 @@
 import { CalendarDays, Filter } from "lucide-react";
 import { FixtureTable } from "@/components/tables/fixture-table";
 import { EmptyState } from "@/components/ui/empty-state";
+import { PageHeader } from "@/components/ui/page-header";
 import { StatusBadge } from "@/components/ui/status-badge";
 import { getFixtures } from "@/lib/db/queries";
 
@@ -11,16 +12,12 @@ export default async function FixturesPage() {
 
   return (
     <main className="space-y-5">
-      <header className="flex flex-wrap items-start justify-between gap-3">
-        <div>
-          <h1 className="flex items-center gap-2 text-2xl font-semibold">
-            <CalendarDays className="h-6 w-6 text-[var(--info)]" />
-            Fixtures
-          </h1>
-          <p className="mt-1 text-sm text-[var(--text-secondary)]">
-            Fixture inventory, last score update, signal count, and proof status.
-          </p>
-        </div>
+      <PageHeader
+        icon={CalendarDays}
+        eyebrow="Fixture inventory"
+        title="Fixtures"
+        detail="Fixture inventory, last score update, signal count, and proof status."
+      >
         <div className="flex flex-wrap items-center gap-2">
           <Filter className="h-4 w-4 text-[var(--text-muted)]" />
           <StatusBadge variant="success">live</StatusBadge>
@@ -29,7 +26,7 @@ export default async function FixturesPage() {
           <StatusBadge variant="warning">has signals</StatusBadge>
           <StatusBadge variant="proof">proof available</StatusBadge>
         </div>
-      </header>
+      </PageHeader>
       {fixtures.length > 0 ? (
         <FixtureTable fixtures={fixtures} />
       ) : (

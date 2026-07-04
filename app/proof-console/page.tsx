@@ -3,6 +3,7 @@ import { ProofCard } from "@/components/cards/proof-card";
 import { ProofRequestForm } from "@/components/cards/proof-request-form";
 import { StatusBadge } from "@/components/ui/status-badge";
 import { getVerificationResults } from "@/lib/db/queries";
+import { PageHeader, SectionShell } from "@/components/ui/page-header";
 
 export const dynamic = "force-dynamic";
 
@@ -11,30 +12,26 @@ export default async function ProofConsolePage() {
 
   return (
     <main className="space-y-5">
-      <header className="flex flex-wrap items-start justify-between gap-3">
-        <div>
-          <h1 className="flex items-center gap-2 text-2xl font-semibold">
-            <ShieldCheck className="h-6 w-6 text-[var(--proof)]" />
-            Proof Console
-          </h1>
-          <p className="mt-1 text-sm text-[var(--text-secondary)]">
-            Score/stat validation records, raw proof material, and validation results.
-          </p>
-        </div>
+      <PageHeader
+        icon={ShieldCheck}
+        eyebrow="Verification surface"
+        title="Proof Console"
+        detail="Score/stat validation records, raw proof material, and validation results."
+      >
         <StatusBadge variant="proof">Solana validation surface</StatusBadge>
-      </header>
+      </PageHeader>
       <section className="grid gap-3 md:grid-cols-3">
-        <div className="panel rounded-md p-4">
-          <p className="text-xs uppercase text-[var(--text-muted)]">Pending proof requests</p>
-          <p className="mt-2 text-2xl font-semibold">{verifications.filter((item) => item.status === "pending").length}</p>
+        <div className="panel interactive-panel p-4">
+          <p className="text-xs font-black uppercase text-[var(--text-muted)]">Pending proof requests</p>
+          <p className="mt-2 text-3xl font-black">{verifications.filter((item) => item.status === "pending").length}</p>
         </div>
-        <div className="panel rounded-md p-4">
-          <p className="text-xs uppercase text-[var(--text-muted)]">Verified updates</p>
-          <p className="mt-2 text-2xl font-semibold">{verifications.filter((item) => item.status === "verified").length}</p>
+        <div className="panel interactive-panel p-4">
+          <p className="text-xs font-black uppercase text-[var(--text-muted)]">Verified updates</p>
+          <p className="mt-2 text-3xl font-black">{verifications.filter((item) => item.status === "verified").length}</p>
         </div>
-        <div className="panel rounded-md p-4">
-          <p className="text-xs uppercase text-[var(--text-muted)]">Review required</p>
-          <p className="mt-2 text-2xl font-semibold">{verifications.filter((item) => item.status !== "verified").length}</p>
+        <div className="panel interactive-panel p-4">
+          <p className="text-xs font-black uppercase text-[var(--text-muted)]">Review required</p>
+          <p className="mt-2 text-3xl font-black">{verifications.filter((item) => item.status !== "verified").length}</p>
         </div>
       </section>
       {verifications[0] && (
@@ -45,11 +42,11 @@ export default async function ProofConsolePage() {
           statKey={verifications[0].statKey ?? "1002"}
         />
       )}
-      <section className="space-y-3">
+      <SectionShell title="Proof Records">
         {verifications.map((verification) => (
           <ProofCard key={verification.id} verification={verification} />
         ))}
-      </section>
+      </SectionShell>
     </main>
   );
 }

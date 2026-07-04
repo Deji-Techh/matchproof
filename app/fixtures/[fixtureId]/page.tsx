@@ -4,6 +4,7 @@ import { MetricCard } from "@/components/ui/metric-card";
 import { RawJsonViewer } from "@/components/ui/raw-json-viewer";
 import { StatusBadge } from "@/components/ui/status-badge";
 import { Timeline } from "@/components/timeline/timeline";
+import { SectionShell } from "@/components/ui/page-header";
 import { getFixtureMonitor } from "@/lib/db/queries";
 import { formatDateTime, parseJson } from "@/lib/utils";
 
@@ -26,14 +27,14 @@ export default async function FixtureMonitorPage({ params }: { params: Promise<{
 
   return (
     <main className="space-y-5">
-      <header className="panel rounded-md p-4">
-        <div className="flex flex-wrap items-start justify-between gap-3">
+      <header className="panel-strong track-line reveal-up p-4 pt-8 sm:p-5 sm:pt-8">
+        <div className="flex flex-col gap-5 sm:flex-row sm:flex-wrap sm:items-start sm:justify-between">
           <div>
             <div className="flex flex-wrap items-center gap-2">
               <StatusBadge variant={fixture.status === "live" ? "success" : "neutral"}>{fixture.status ?? "unknown"}</StatusBadge>
               <span className="mono text-xs text-[var(--text-muted)]">{fixture.fixtureId}</span>
             </div>
-            <h1 className="mt-3 text-2xl font-semibold">
+            <h1 className="page-title safe-word mt-4 font-black uppercase leading-none tracking-normal">
               {fixture.participant1} vs {fixture.participant2}
             </h1>
             <p className="mt-1 text-sm text-[var(--text-secondary)]">
@@ -41,9 +42,9 @@ export default async function FixtureMonitorPage({ params }: { params: Promise<{
               {formatDateTime(fixture.startTime)}
             </p>
           </div>
-          <div className="text-right">
-            <p className="text-4xl font-semibold">{score}</p>
-            <p className="mt-1 text-sm text-[var(--text-secondary)]">Period {latestPayload.period ?? "unknown"}</p>
+          <div className="text-left sm:text-right">
+            <p className="text-5xl font-black sm:text-6xl">{score}</p>
+            <p className="mt-1 text-sm font-semibold uppercase text-[var(--text-secondary)]">Period {latestPayload.period ?? "unknown"}</p>
           </div>
         </div>
       </header>
@@ -54,12 +55,14 @@ export default async function FixtureMonitorPage({ params }: { params: Promise<{
         <MetricCard title="Raw Payload" value="Stored" detail="Fixture snapshot evidence" icon={Database} tone="info" />
       </section>
       <section className="grid gap-4 xl:grid-cols-[1fr_420px]">
-        <div className="space-y-3">
-          <h2 className="text-sm font-medium uppercase text-[var(--text-muted)]">Timeline</h2>
+        <SectionShell title="Timeline">
           <Timeline updates={fixture.updates} signals={fixture.signals} verifications={fixture.verifications} />
-        </div>
+        </SectionShell>
         <aside className="space-y-3">
-          <h2 className="text-sm font-medium uppercase text-[var(--text-muted)]">Raw Fixture Payload</h2>
+          <div className="flex items-center gap-3">
+            <span className="h-2 w-2 bg-[var(--accent-red)]" />
+            <h2 className="text-sm font-black uppercase text-[var(--text-secondary)]">Raw Fixture Payload</h2>
+          </div>
           <RawJsonViewer value={fixture.rawJson} />
         </aside>
       </section>

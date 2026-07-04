@@ -27,15 +27,17 @@ export function MetricCard({
               : "text-[var(--text-secondary)]";
 
   return (
-    <section className="panel rounded-md p-4">
+    <section className="panel interactive-panel data-scan p-4">
       <div className="flex items-start justify-between gap-3">
         <div>
-          <p className="text-xs uppercase text-[var(--text-muted)]">{title}</p>
-          <p className="mt-2 text-2xl font-semibold">{value}</p>
+          <p className="text-xs font-black uppercase text-[var(--text-muted)]">{title}</p>
+          <p className="mt-3 text-3xl font-black">{value}</p>
         </div>
-        <Icon className={`h-5 w-5 ${color}`} />
+        <div className="border border-[var(--border-subtle)] bg-black p-2">
+          <Icon className={`h-5 w-5 ${color}`} />
+        </div>
       </div>
-      <p className="mt-3 text-xs text-[var(--text-secondary)]">{detail}</p>
+      <p className="mt-4 border-t border-[var(--border-subtle)] pt-3 text-xs leading-5 text-[var(--text-secondary)]">{detail}</p>
     </section>
   );
 }
