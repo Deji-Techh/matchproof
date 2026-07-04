@@ -34,7 +34,7 @@
 
 ## Blocked
 
-None.
+- Render deployment: Render CLI is installed but unauthenticated in this environment. `render whoami` returns unauthorized, and blueprint validation requires a Render workspace.
 
 ## Last Validation
 
@@ -46,9 +46,10 @@ None.
 - Prisma: Passed - `DATABASE_URL="file:./dev.db" npx prisma validate && DATABASE_URL="file:./dev.db" npx prisma migrate status`
 - Audit: Passed - `npm audit --audit-level=moderate`
 - React Doctor: Passed - 100/100, no issues found
+- Render CLI: Blocked - `render whoami` returned unauthorized
 
 ## Last GitHub Push
 
-Commit: 5bdfbba feat: add operator control flows
+Commit: de34efe docs: record render deployment auth blocker
 Branch: main
 Date: 2026-07-04

@@ -160,6 +160,8 @@ Status: In Progress
 
 `render.yaml` is included for Render deployment. Configure real TxLINE credentials in Render environment variables if live integration is required.
 
+Local Render CLI deployment requires an authenticated Render workspace. In this environment, `render whoami` returned unauthorized, so the blueprint is prepared but not deployed.
+
 ## TxLINE Endpoints Used
 
 Status: Implemented
