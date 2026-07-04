@@ -39,6 +39,8 @@ for (const [route, text] of routes) {
   await page.goto(`${baseUrl}/replay-lab`, { waitUntil: "networkidle" });
   await page.getByTitle("Start replay").click();
   await page.getByText("Replay running", { exact: false }).waitFor({ state: "visible", timeout: 10_000 });
+  await page.getByTitle("Advance replay").click();
+  await page.getByText("1/", { exact: false }).waitFor({ state: "visible", timeout: 10_000 });
   await page.getByTitle("Pause replay").click();
   await page.getByText("Replay paused", { exact: false }).waitFor({ state: "visible", timeout: 10_000 });
   await page.getByTitle("Reset replay").click();
@@ -53,6 +55,17 @@ for (const [route, text] of routes) {
   await page.getByText("Validation status:", { exact: false }).waitFor({ state: "visible", timeout: 10_000 });
 
   await page.goto(`${baseUrl}/command-center`, { waitUntil: "networkidle" });
+  await page.getByRole("button", { name: "Sync fixtures" }).click();
+  await page.getByTestId("ingestion-status").getByText("TxLINE credentials are not configured", { exact: false }).waitFor({
+    state: "visible",
+    timeout: 10_000,
+  });
+  await page.getByRole("button", { name: "Score snapshot" }).click();
+  await page.getByTestId("ingestion-status").getByText("TxLINE credentials are not configured", { exact: false }).waitFor({
+    state: "visible",
+    timeout: 10_000,
+  });
+  await page.getByText("Evidence Flow", { exact: false }).waitFor({ state: "visible", timeout: 10_000 });
   await page.screenshot({ path: "/tmp/matchproof-command-center.png", fullPage: true });
 
   const response = await page.goto(`${baseUrl}/api/health`, { waitUntil: "networkidle" });

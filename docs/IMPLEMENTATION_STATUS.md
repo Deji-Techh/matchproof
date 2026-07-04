@@ -9,6 +9,7 @@
 - [x] Application shell
 - [x] Demo mode
 - [x] Core API routes
+- [x] TxLINE ingestion routes
 - [x] Deterministic agent runtime
 - [x] Command Center
 - [x] Fixtures screen
@@ -17,10 +18,13 @@
 - [x] Proof Console
 - [x] Replay Lab
 - [x] Replay controls
+- [x] Replay step advancement
 - [x] Audit Log
 - [x] Settings screen
 - [x] Signal acknowledgement
 - [x] Proof request form
+- [x] Command Center evidence-flow panel
+- [x] Command Center ingestion controls
 
 ## In Progress
 

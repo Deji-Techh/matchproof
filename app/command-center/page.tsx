@@ -4,6 +4,8 @@ import { StatusBadge } from "@/components/ui/status-badge";
 import { FixtureTable } from "@/components/tables/fixture-table";
 import { SignalTable } from "@/components/tables/signal-table";
 import { AuditLogTable } from "@/components/tables/audit-log-table";
+import { DataFlowPanel } from "@/components/cards/data-flow-panel";
+import { IngestionControls } from "@/components/cards/ingestion-controls";
 import { getCommandCenterData } from "@/lib/db/queries";
 import { DEMO_MODE_LABEL } from "@/lib/demo-data";
 import { formatDateTime } from "@/lib/utils";
@@ -29,6 +31,10 @@ export default async function CommandCenterPage() {
         <MetricCard title="Stream Health" value="Demo" detail={`Last update ${formatDateTime(data.latestUpdate?.ingestedAt)}`} icon={Radio} tone="warning" />
         <MetricCard title="Agent Runtime" value={data.signals.length} detail="Evidence-backed deterministic signals" icon={Siren} tone="info" />
         <MetricCard title="Proof Summary" value={data.verifications.length} detail="Proof requests and placeholders" icon={ShieldCheck} tone="proof" />
+      </section>
+      <section className="grid gap-4 xl:grid-cols-[1fr_420px]">
+        <DataFlowPanel />
+        <IngestionControls fixtureId={data.fixtures[0]?.fixtureId} />
       </section>
       <section className="grid gap-4 md:grid-cols-2">
         <MetricCard title="Fixtures" value={data.fixtures.length} detail="Stored fixture rows" icon={Database} tone="neutral" />

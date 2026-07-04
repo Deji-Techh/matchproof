@@ -23,12 +23,14 @@ MatchProof provides an operator console for TxLINE fixture and score feeds. It f
 ## Key Features
 
 - Status: Implemented - documented TxLINE client methods for fixture, score, historical, stream, and validation flows
+- Status: Implemented - operator-triggered fixture and score ingestion routes with audit events
 - Status: Implemented - Prisma schema and SQLite demo seed
 - Status: Implemented - deterministic Feed Health Agent
 - Status: Implemented - deterministic Match State Agent
 - Status: Implemented - Signal feed with evidence drawers
 - Status: Implemented - Match Monitor with raw payload viewer
 - Status: Implemented - Replay Lab surface and replay API controls
+- Status: Implemented - replay step advancement with audit trail
 - Status: Implemented - Proof Console with safe demo fallback and real TxLINE validation route
 - Status: Implemented - Audit Log
 - Status: Implemented - Settings screen
@@ -56,6 +58,11 @@ Agents are deterministic. The MVP includes Feed Health, Match State, and Proof a
 Status: Implemented
 
 Runtime client methods and the proof route are implemented. Demo mode remains active until TxLINE credentials are configured.
+
+Operator ingestion routes:
+
+- `POST /api/ingest/fixtures`
+- `POST /api/ingest/scores`
 
 Expected TxLINE endpoints:
 
@@ -167,6 +174,8 @@ Local Render CLI deployment requires an authenticated Render workspace. In this 
 Status: Implemented
 
 Client methods are implemented for the fixture snapshot, score snapshot, score updates, score stream parsing, historical scores, and score stat validation flows.
+
+The Command Center exposes operator controls for fixture sync, score snapshots, recent score updates, and historical score ingestion. If credentials are missing, failed live calls are recorded as audit events and demo data remains active.
 
 ## Product Boundary
 
