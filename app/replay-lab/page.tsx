@@ -23,7 +23,7 @@ export default async function ReplayLabPage() {
           Replay historical or seeded score updates through the same monitoring surface.
         </p>
       </header>
-      <ReplayControls />
+      <ReplayControls fixtureId={fixture?.fixtureId} initialStatus={session?.status ?? "idle"} />
       <section className="panel rounded-md p-4">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div>

@@ -16,8 +16,11 @@
 - [x] Signals screen
 - [x] Proof Console
 - [x] Replay Lab
+- [x] Replay controls
 - [x] Audit Log
 - [x] Settings screen
+- [x] Signal acknowledgement
+- [x] Proof request form
 
 ## In Progress
 
@@ -46,6 +49,6 @@ None.
 
 ## Last GitHub Push
 
-Commit: fc9562b feat: implement MatchProof MVP console
+Commit: Pending operator controls commit
 Branch: main
 Date: 2026-07-04

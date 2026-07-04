@@ -31,10 +31,26 @@ const routes = [
   ["/settings", "Settings"],
 ] as const;
 
-  for (const [route, text] of routes) {
+for (const [route, text] of routes) {
     await page.goto(`${baseUrl}${route}`, { waitUntil: "networkidle" });
     await page.getByText(text, { exact: false }).first().waitFor({ state: "visible", timeout: 10_000 });
   }
+
+  await page.goto(`${baseUrl}/replay-lab`, { waitUntil: "networkidle" });
+  await page.getByTitle("Start replay").click();
+  await page.getByText("Replay running", { exact: false }).waitFor({ state: "visible", timeout: 10_000 });
+  await page.getByTitle("Pause replay").click();
+  await page.getByText("Replay paused", { exact: false }).waitFor({ state: "visible", timeout: 10_000 });
+  await page.getByTitle("Reset replay").click();
+  await page.getByText("Replay idle", { exact: false }).waitFor({ state: "visible", timeout: 10_000 });
+
+  await page.goto(`${baseUrl}/signals`, { waitUntil: "networkidle" });
+  await page.getByTitle("Acknowledge signal").first().click();
+  await page.getByText("acknowledged", { exact: false }).first().waitFor({ state: "visible", timeout: 10_000 });
+
+  await page.goto(`${baseUrl}/proof-console`, { waitUntil: "networkidle" });
+  await page.getByRole("button", { name: "Verify" }).click();
+  await page.getByText("Validation status:", { exact: false }).waitFor({ state: "visible", timeout: 10_000 });
 
   await page.goto(`${baseUrl}/command-center`, { waitUntil: "networkidle" });
   await page.screenshot({ path: "/tmp/matchproof-command-center.png", fullPage: true });

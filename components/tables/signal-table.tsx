@@ -4,6 +4,7 @@ import type { AgentSignal, Fixture } from "@prisma/client";
 import { SeverityBadge } from "@/components/ui/severity-badge";
 import { StatusBadge } from "@/components/ui/status-badge";
 import { formatDateTime } from "@/lib/utils";
+import { SignalAcknowledgeButton } from "@/components/tables/signal-acknowledge-button";
 
 type SignalRow = AgentSignal & { fixture?: Fixture | null };
 
@@ -56,6 +57,7 @@ export function SignalTable({ signals }: { signals: SignalRow[] }) {
                   <Link href="/proof-console" title="Verify score update" className="rounded border border-[var(--border-subtle)] p-2 hover:border-[var(--border-strong)]">
                     <ShieldCheck className="h-4 w-4" />
                   </Link>
+                  <SignalAcknowledgeButton signalId={signal.id} />
                   <Link href="/replay-lab" title="Replay fixture" className="rounded border border-[var(--border-subtle)] p-2 hover:border-[var(--border-strong)]">
                     <History className="h-4 w-4" />
                   </Link>

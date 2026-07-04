@@ -1,5 +1,6 @@
 import { ShieldCheck } from "lucide-react";
 import { ProofCard } from "@/components/cards/proof-card";
+import { ProofRequestForm } from "@/components/cards/proof-request-form";
 import { StatusBadge } from "@/components/ui/status-badge";
 import { getVerificationResults } from "@/lib/db/queries";
 
@@ -36,6 +37,14 @@ export default async function ProofConsolePage() {
           <p className="mt-2 text-2xl font-semibold">{verifications.filter((item) => item.status !== "verified").length}</p>
         </div>
       </section>
+      {verifications[0] && (
+        <ProofRequestForm
+          fixtureId={verifications[0].fixtureId}
+          sourceUpdateId={verifications[0].sourceUpdateId ?? undefined}
+          sequence={verifications[0].sequence ?? "1002"}
+          statKey={verifications[0].statKey ?? "1002"}
+        />
+      )}
       <section className="space-y-3">
         {verifications.map((verification) => (
           <ProofCard key={verification.id} verification={verification} />
