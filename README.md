@@ -169,11 +169,11 @@ DATABASE_URL="file:./dev.db" npm run build
 
 ## Deployment
 
-Status: In Progress
+Status: Implemented
 
-`render.yaml` is included for Render deployment. Configure real TxLINE credentials in Render environment variables if live integration is required.
+The Render deployment is live at `https://matchproof.onrender.com`.
 
-Local Render CLI deployment requires an authenticated Render workspace. In this environment, `render whoami` returned unauthorized, so the blueprint is prepared but not deployed.
+`render.yaml` is included for repeatable Render deployment. Configure real TxLINE credentials in Render environment variables if live integration is required.
 
 ## TxLINE Endpoints Used
 
@@ -193,7 +193,7 @@ It does not recommend bets, place wagers, provide picks, calculate gambling prof
 
 ## Known Limitations
 
-- Status: In Progress - TxLINE credentials are not configured in this local environment.
+- Status: In Progress - TxLINE credentials are not configured in this local or hosted demo environment.
 - Status: Planned - long-running production stream worker for hosted continuous ingestion.
 - Status: Planned - real score/stat proof verification depends on TxLINE credentials and available proof data.
 - Status: Planned - final public repository switch requires project-owner approval.
@@ -202,7 +202,9 @@ It does not recommend bets, place wagers, provide picks, calculate gambling prof
 
 Status: In Progress
 
-Final submission requires a public repository, deployed app, demo video, accurate setup instructions, TxLINE endpoint notes, API feedback, and a completed public-repo preparation checklist. The repository must remain private until project-owner approval.
+The deployed app is available at `https://matchproof.onrender.com`.
+
+Final submission still requires project-owner approval to make the repository public, a demo video, final TxLINE endpoint notes, API feedback, and a completed public-repo preparation checklist. The repository must remain private until project-owner approval.
 
 ## Feedback on TxLINE
 

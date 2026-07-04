@@ -27,10 +27,11 @@
 - [x] Proof request form
 - [x] Command Center evidence-flow panel
 - [x] Command Center ingestion controls
+- [x] Render deployment
 
 ## In Progress
 
-- [ ] Render deployment
+None.
 
 ## Planned
 
@@ -40,7 +41,7 @@
 
 ## Blocked
 
-- Render deployment: Render CLI is installed but unauthenticated in this environment. `render whoami` returns unauthorized, and blueprint validation requires a Render workspace.
+None.
 
 ## Last Validation
 
@@ -52,7 +53,10 @@
 - Prisma: Passed - `DATABASE_URL="file:./dev.db" npx prisma validate && DATABASE_URL="file:./dev.db" npx prisma migrate status`
 - Audit: Passed - `npm audit --audit-level=moderate`
 - React Doctor: Passed - 100/100, no issues found
-- Render CLI: Blocked - `render whoami` returned unauthorized
+- Render Blueprint: Passed - `render blueprints validate render.yaml --workspace tea-d5ng1rkmrvns73fnhsh0 --output json`
+- Render Deploy: Passed - service `srv-d94jg4q8qa3s73cret80`, deploy `dep-d94ji45ckfvc73a4oqd0`, status `live`
+- Deployed Health: Passed - `curl -sSf https://matchproof.onrender.com/api/health`
+- Deployed Browser: Passed - `PLAYWRIGHT_BASE_URL=https://matchproof.onrender.com npm run test:browser`
 
 ## Last GitHub Push
 
