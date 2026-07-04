@@ -5,6 +5,10 @@ import { AppShell } from "@/components/shell/app-shell";
 export const metadata: Metadata = {
   title: "MatchProof",
   description: "Autonomous verification for live World Cup data.",
+  icons: {
+    icon: "/icon.png",
+    apple: "/apple-icon.png",
+  },
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {

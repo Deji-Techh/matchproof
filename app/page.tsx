@@ -1,7 +1,7 @@
 import type { CSSProperties } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import {
-  Activity,
   ArrowRight,
   Boxes,
   Database,
@@ -9,14 +9,15 @@ import {
   Gauge,
   History,
   Radio,
-  ScrollText,
   ShieldCheck,
   Siren,
 } from "lucide-react";
 import { StatusBadge } from "@/components/ui/status-badge";
 import { MatchTicker } from "@/components/shell/match-ticker";
-import { getHealthSummary } from "@/lib/db/queries";
+import { getCommandCenterData, getHealthSummary } from "@/lib/db/queries";
 import { formatDateTime } from "@/lib/utils";
+
+export const dynamic = "force-dynamic";
 
 /* ------------------------------------------------------------------
  * LANDING PAGE CONTENT STORYBOARD
@@ -71,8 +72,14 @@ const surfaces = [
 ];
 
 export default async function Home() {
-  const summary = await getHealthSummary();
+  const [summary, commandData] = await Promise.all([getHealthSummary(), getCommandCenterData()]);
   const modeVariant = summary.mode === "live" ? "success" : "warning";
+  const activeFixture =
+    commandData.fixtures.find((fixture) => fixture.status === "live") ??
+    commandData.fixtures.find((fixture) => fixture.updates.length > 0) ??
+    commandData.fixtures[0];
+  const latestFixtureUpdate = activeFixture?.updates[0];
+  const scoreState = readScoreState(latestFixtureUpdate?.rawJson);
 
   return (
     <main className="min-h-screen bg-[var(--bg-main)] text-[var(--text-primary)]">
@@ -125,6 +132,18 @@ export default async function Home() {
 
           <div className="reveal-right" style={delay(REVEAL.heroConsole)}>
             <HeroConsole
+              fixtureName={
+                activeFixture
+                  ? `${activeFixture.participant1 ?? "TBD"} vs ${activeFixture.participant2 ?? "TBD"}`
+                  : "No fixture selected"
+              }
+              homeTeam={activeFixture?.participant1 ?? "Home"}
+              awayTeam={activeFixture?.participant2 ?? "Away"}
+              homeScore={scoreState.home}
+              awayScore={scoreState.away}
+              period={scoreState.period}
+              sequence={latestFixtureUpdate?.sequence ?? "pending"}
+              latestSignal={commandData.signals[0]?.title ?? "No open signal"}
               fixtureCount={summary.fixtureCount}
               updateCount={summary.updateCount}
               signalCount={summary.signalCount}
@@ -209,7 +228,9 @@ function LandingNav({ mode }: { mode: string }) {
   return (
     <nav className="flex min-h-16 items-center justify-between gap-3 border-b border-[var(--border-subtle)] bg-[var(--bg-panel)] px-3 sm:px-5 lg:px-10">
       <Link href="/" className="flex items-center gap-3">
-        <span className="grid h-9 w-9 shrink-0 place-items-center bg-[var(--accent-red)] font-black text-black">MP</span>
+        <span className="grid h-10 w-10 shrink-0 place-items-center overflow-hidden">
+          <Image src="/brand/matchproof-mark.png" alt="MatchProof" width={36} height={36} className="h-9 w-9 object-contain" priority />
+        </span>
         <span>
           <span className="block font-black uppercase leading-none">MatchProof</span>
           <span className="mono mt-1 block text-[10px] uppercase text-[var(--text-muted)]">World Cup data verification</span>
@@ -232,55 +253,126 @@ function LandingNav({ mode }: { mode: string }) {
 }
 
 function HeroConsole({
+  fixtureName,
+  homeTeam,
+  awayTeam,
+  homeScore,
+  awayScore,
+  period,
+  sequence,
+  latestSignal,
   fixtureCount,
   updateCount,
   signalCount,
   verificationCount,
   latestUpdateAt,
 }: {
+  fixtureName: string;
+  homeTeam: string;
+  awayTeam: string;
+  homeScore: number | string;
+  awayScore: number | string;
+  period: string;
+  sequence: string;
+  latestSignal: string;
   fixtureCount: number;
   updateCount: number;
   signalCount: number;
   verificationCount: number;
   latestUpdateAt: Date | null;
 }) {
-  const rows = [
-    ["Feed health", "Seeded fallback stream", Radio, "warning"],
-    ["Agent runtime", `${signalCount} deterministic signals`, Activity, "success"],
-    ["Raw evidence", `${updateCount} score updates stored`, Boxes, "info"],
-    ["Proof queue", `${verificationCount} validation records`, ShieldCheck, "proof"],
-    ["Audit trail", `${fixtureCount} fixture context rows`, ScrollText, "neutral"],
-  ] as const;
+  const rail = [
+    { label: "Updates", value: updateCount, icon: Radio },
+    { label: "Signals", value: signalCount, icon: Siren },
+    { label: "Proof", value: verificationCount, icon: ShieldCheck },
+    { label: "Fixtures", value: fixtureCount, icon: Boxes },
+  ];
 
   return (
-    <aside className="data-scan panel-strong track-line p-4 pt-7">
-      <div className="flex flex-wrap items-start justify-between gap-4 border-b border-[var(--border-subtle)] pb-4">
+    <aside className="data-scan panel-strong track-line p-4 pt-7 sm:p-5 sm:pt-8">
+      <div className="flex flex-wrap items-start justify-between gap-4">
         <div>
           <p className="mono text-[11px] uppercase text-[var(--text-muted)]">Command Center Preview</p>
-          <h2 className="mt-2 text-2xl font-black uppercase">Live integrity board</h2>
+          <h2 className="mt-2 text-2xl font-black uppercase">Match integrity board</h2>
         </div>
         <StatusBadge variant="warning">Demo stream</StatusBadge>
       </div>
-      <div className="mt-4 space-y-2">
-        {rows.map(([label, value, Icon, variant]) => (
-          <div key={label} className="flex items-center justify-between gap-4 border border-[var(--border-subtle)] bg-[var(--bg-panel)] p-3">
-            <div className="flex min-w-0 items-center gap-3">
-              <Icon className="h-5 w-5 shrink-0 text-[var(--text-secondary)]" />
-              <div className="min-w-0">
-                <p className="text-sm font-semibold">{label}</p>
-                <p className="truncate text-xs text-[var(--text-muted)]">{value}</p>
-              </div>
-            </div>
-            <StatusBadge variant={variant}>{variant}</StatusBadge>
+
+      <div className="mt-5 border border-[var(--border-subtle)] bg-[var(--bg-panel)] p-4">
+        <div className="flex flex-wrap items-center justify-between gap-3 border-b border-[var(--border-subtle)] pb-3">
+          <p className="mono text-[11px] uppercase text-[var(--text-muted)]">{fixtureName}</p>
+          <span className="mono text-[11px] uppercase text-[var(--accent-cyan)]">seq {sequence}</span>
+        </div>
+        <div className="grid grid-cols-[1fr_auto_1fr] items-end gap-3 py-5">
+          <div>
+            <p className="text-xs font-black uppercase text-[var(--text-muted)]">Home</p>
+            <p className="safe-word mt-2 text-lg font-black uppercase leading-tight">{homeTeam}</p>
           </div>
-        ))}
+          <div className="text-center">
+            <p className="text-5xl font-black leading-none sm:text-6xl">
+              {homeScore}-{awayScore}
+            </p>
+            <p className="mt-2 text-xs font-black uppercase text-[var(--accent-red)]">{period}</p>
+          </div>
+          <div className="text-right">
+            <p className="text-xs font-black uppercase text-[var(--text-muted)]">Away</p>
+            <p className="safe-word mt-2 text-lg font-black uppercase leading-tight">{awayTeam}</p>
+          </div>
+        </div>
+        <div className="grid gap-2 border-t border-[var(--border-subtle)] pt-3 sm:grid-cols-3">
+          <BoardDatum label="Feed" value="Seeded fallback" />
+          <BoardDatum label="Latest update" value={formatDateTime(latestUpdateAt)} />
+          <BoardDatum label="Proof mode" value="Devnet gated" />
+        </div>
       </div>
-      <div className="mt-4 border border-[var(--border-subtle)] bg-black p-4">
-        <p className="mono text-[11px] uppercase text-[var(--text-muted)]">Latest source update</p>
-        <p className="mt-2 text-sm text-[var(--text-secondary)]">{formatDateTime(latestUpdateAt)}</p>
+
+      <div className="mt-3 border border-[var(--border-subtle)] bg-black p-4">
+        <div className="flex items-start gap-3">
+          <span className="mt-1 h-2 w-2 shrink-0 bg-[var(--warning)]" />
+          <div className="min-w-0">
+            <p className="mono text-[11px] uppercase text-[var(--text-muted)]">Latest agent signal</p>
+            <p className="safe-word mt-2 text-sm font-black uppercase leading-5">{latestSignal}</p>
+          </div>
+        </div>
+      </div>
+
+      <div className="mt-3 grid grid-cols-2 gap-2 sm:grid-cols-4">
+        {rail.map((item) => {
+          const Icon = item.icon;
+          return (
+            <div key={item.label} className="border border-[var(--border-subtle)] bg-black p-3">
+              <Icon className="h-4 w-4 text-[var(--text-muted)]" />
+              <p className="mt-3 text-2xl font-black">{item.value}</p>
+              <p className="mt-1 text-[10px] font-black uppercase text-[var(--text-muted)]">{item.label}</p>
+            </div>
+          );
+        })}
       </div>
     </aside>
   );
+}
+
+function BoardDatum({ label, value }: { label: string; value: string }) {
+  return (
+    <div>
+      <p className="mono text-[10px] uppercase text-[var(--text-muted)]">{label}</p>
+      <p className="mt-1 truncate text-xs font-semibold text-[var(--text-secondary)]">{value}</p>
+    </div>
+  );
+}
+
+function readScoreState(rawJson?: string): { home: number | string; away: number | string; period: string } {
+  if (!rawJson) return { home: "-", away: "-", period: "pending" };
+  try {
+    const payload = JSON.parse(rawJson) as { score?: { listedHome?: number; listedAway?: number }; period?: string };
+    return {
+      home: typeof payload.score?.listedHome === "number" ? payload.score.listedHome : "-",
+      away: typeof payload.score?.listedAway === "number" ? payload.score.listedAway : "-",
+      period: payload.period ?? "live",
+    };
+  } catch {
+    return { home: "-", away: "-", period: "pending" };
+  }
 }
 
 function delay(base: string, offset = 0): CSSProperties {

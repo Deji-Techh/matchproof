@@ -1,4 +1,5 @@
 import { Activity, Radio, Settings, ShieldCheck } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
 import { StatusBadge } from "@/components/ui/status-badge";
 import { MatchTicker } from "@/components/shell/match-ticker";
@@ -18,7 +19,9 @@ export function TopStatusBar() {
       <MatchTicker />
       <div className="flex min-h-16 items-center justify-between gap-3 px-3 sm:px-4">
         <Link href="/" className="flex min-w-0 items-center gap-3">
-          <span className="grid h-9 w-9 shrink-0 place-items-center bg-[var(--accent-red)] font-black text-black">MP</span>
+          <span className="grid h-10 w-10 shrink-0 place-items-center overflow-hidden">
+            <Image src="/brand/matchproof-mark.png" alt="MatchProof" width={36} height={36} className="h-9 w-9 object-contain" priority />
+          </span>
           <span>
             <span className="block text-base font-black uppercase leading-none tracking-normal">MatchProof</span>
             <span className="mono mt-1 block text-[10px] uppercase text-[var(--text-muted)]">Autonomous verification console</span>

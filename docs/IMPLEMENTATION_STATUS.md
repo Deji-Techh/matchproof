@@ -32,6 +32,7 @@
 - [x] Match-state ticker for previous, current, and upcoming fixtures
 - [x] Responsive mobile layout pass
 - [x] Reference video asset integrated into landing page
+- [x] MatchProof logo and favicon integrated
 
 ## In Progress
 

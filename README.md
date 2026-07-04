@@ -25,6 +25,7 @@ MatchProof provides an operator console for TxLINE fixture and score feeds. It f
 - Status: Implemented - documented TxLINE client methods for fixture, score, historical, stream, and validation flows
 - Status: Implemented - public landing page with video-backed product introduction
 - Status: Implemented - responsive console redesign for desktop and mobile viewports
+- Status: Implemented - MatchProof logo and favicon
 - Status: Implemented - match-state ticker showing previous results, current monitored matches, and upcoming fixtures from stored fixture data
 - Status: Implemented - operator-triggered fixture and score ingestion routes with audit events
 - Status: Implemented - Prisma schema and SQLite demo seed
