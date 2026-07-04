@@ -5,6 +5,7 @@ import { ensureDemoData } from "@/lib/db/demo-seed";
 import { createProofSignal } from "@/lib/agents/proof-agent";
 import { getSafeTxlineStatus } from "@/lib/txline/auth";
 import { getScoreStatValidation } from "@/lib/txline/client";
+import { checkRateLimit } from "@/lib/security/rate-limit";
 
 const BodySchema = z.object({
   fixtureId: z.string().min(1).max(120),
@@ -15,6 +16,9 @@ const BodySchema = z.object({
 
 export async function POST(request: Request) {
   try {
+    const limited = checkRateLimit(request, "verify-score-stat", { limit: 20, windowMs: 60_000 });
+    if (limited) return limited;
+
     await ensureDemoData();
     const body = BodySchema.parse(await request.json());
     const txline = getSafeTxlineStatus();

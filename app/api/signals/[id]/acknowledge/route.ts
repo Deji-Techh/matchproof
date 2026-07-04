@@ -2,11 +2,15 @@ import { NextResponse } from "next/server";
 import { z } from "zod";
 import { prisma } from "@/lib/db/prisma";
 import { ensureDemoData } from "@/lib/db/demo-seed";
+import { checkRateLimit } from "@/lib/security/rate-limit";
 
 const ParamsSchema = z.object({ id: z.string().min(1).max(160) });
 
 export async function POST(_request: Request, { params }: { params: Promise<{ id: string }> }) {
   try {
+    const limited = checkRateLimit(_request, "signal-acknowledge", { limit: 60, windowMs: 60_000 });
+    if (limited) return limited;
+
     await ensureDemoData();
     const parsed = ParamsSchema.parse(await params);
     const signal = await prisma.agentSignal.update({

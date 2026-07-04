@@ -73,6 +73,12 @@ for (const [route, text] of routes) {
   const healthText = await page.locator("body").innerText();
   assert.equal(healthText.includes("\"ok\":true"), true);
 
+  const exportResponse = await page.goto(`${baseUrl}/api/export`, { waitUntil: "networkidle" });
+  assert.equal(exportResponse?.ok(), true);
+  const exportText = await page.locator("body").innerText();
+  assert.equal(exportText.includes("\"product\":\"MatchProof\""), true);
+  assert.equal(exportText.includes("\"auditLogs\""), true);
+
   assert.deepEqual(consoleErrors, []);
   assert.deepEqual(pageErrors, []);
 

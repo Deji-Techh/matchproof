@@ -20,6 +20,8 @@
 - [x] Replay controls
 - [x] Replay step advancement
 - [x] Audit Log
+- [x] JSON evidence export
+- [x] Mutation route rate limiting
 - [x] Settings screen
 - [x] Signal acknowledgement
 - [x] Proof request form

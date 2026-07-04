@@ -1,9 +1,13 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/db/prisma";
 import { ensureDemoData } from "@/lib/db/demo-seed";
+import { checkRateLimit } from "@/lib/security/rate-limit";
 
-export async function POST() {
+export async function POST(request: Request) {
   try {
+    const limited = checkRateLimit(request, "replay-step", { limit: 60, windowMs: 60_000 });
+    if (limited) return limited;
+
     await ensureDemoData();
     const session = await prisma.replaySession.findUnique({ where: { id: "demo-replay-session" } });
     if (!session) return NextResponse.json({ error: "Replay session not found" }, { status: 404 });

@@ -2,6 +2,7 @@ import { ScrollText } from "lucide-react";
 import { AuditLogTable } from "@/components/tables/audit-log-table";
 import { StatusBadge } from "@/components/ui/status-badge";
 import { getAuditLogs } from "@/lib/db/queries";
+import { ExportJsonButton } from "@/components/export/export-json-button";
 
 export const dynamic = "force-dynamic";
 
@@ -21,6 +22,7 @@ export default async function AuditLogPage() {
           </p>
         </div>
         <div className="flex flex-wrap gap-2">
+          <ExportJsonButton />
           <StatusBadge>info</StatusBadge>
           <StatusBadge variant="warning">warning</StatusBadge>
           <StatusBadge variant="danger">error</StatusBadge>

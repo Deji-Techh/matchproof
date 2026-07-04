@@ -6,6 +6,7 @@ import { SignalTable } from "@/components/tables/signal-table";
 import { AuditLogTable } from "@/components/tables/audit-log-table";
 import { DataFlowPanel } from "@/components/cards/data-flow-panel";
 import { IngestionControls } from "@/components/cards/ingestion-controls";
+import { ExportJsonButton } from "@/components/export/export-json-button";
 import { getCommandCenterData } from "@/lib/db/queries";
 import { DEMO_MODE_LABEL } from "@/lib/demo-data";
 import { formatDateTime } from "@/lib/utils";
@@ -20,7 +21,9 @@ export default async function CommandCenterPage() {
       <PageHeader
         title="Command Center"
         detail="Live and replayable operational state for TxLINE World Cup fixture and score data."
-      />
+      >
+        <ExportJsonButton />
+      </PageHeader>
       <section className="panel rounded-md border-[var(--warning)]/30 p-3 text-sm text-yellow-100">
         <StatusBadge variant="warning">{DEMO_MODE_LABEL}</StatusBadge>
         <span className="ml-3 text-[var(--text-secondary)]">
@@ -53,11 +56,14 @@ export default async function CommandCenterPage() {
   );
 }
 
-function PageHeader({ title, detail }: { title: string; detail: string }) {
+function PageHeader({ title, detail, children }: { title: string; detail: string; children?: React.ReactNode }) {
   return (
-    <header>
-      <h1 className="text-2xl font-semibold">{title}</h1>
-      <p className="mt-1 text-sm text-[var(--text-secondary)]">{detail}</p>
+    <header className="flex flex-wrap items-start justify-between gap-3">
+      <div>
+        <h1 className="text-2xl font-semibold">{title}</h1>
+        <p className="mt-1 text-sm text-[var(--text-secondary)]">{detail}</p>
+      </div>
+      {children}
     </header>
   );
 }
