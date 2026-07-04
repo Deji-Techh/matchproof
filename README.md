@@ -6,7 +6,7 @@ MatchProof is a TxLINE-powered sports-data integrity, monitoring, replay, verifi
 
 ## Overview
 
-Status: Planned
+Status: Implemented
 
 MatchProof monitors fixture and score data, stores raw payloads for evidence, runs deterministic monitoring agents, supports replay, and verifies selected score/stat updates through TxLINE proof flows where credentials and proof data are available.
 
@@ -16,21 +16,24 @@ Live sports data consumers need to know whether feeds are connected, timely, con
 
 ## Solution
 
+Status: Implemented
+
 MatchProof provides an operator console for TxLINE fixture and score feeds. It focuses on data integrity, auditability, deterministic signals, raw payload inspection, replay, and Solana-backed verification.
 
 ## Key Features
 
-- Status: Planned - TxLINE fixture ingestion
-- Status: Planned - Score snapshot ingestion
-- Status: Planned - Score stream monitoring
-- Status: Planned - Deterministic Feed Health Agent
-- Status: Planned - Deterministic Match State Agent
-- Status: Planned - Signal feed with evidence drawers
-- Status: Planned - Match Monitor with raw payload viewer
-- Status: Planned - Replay Lab
-- Status: Planned - Proof Console
-- Status: Planned - Audit Log
-- Status: Planned - clearly labeled demo mode
+- Status: Implemented - documented TxLINE client methods for fixture, score, historical, stream, and validation flows
+- Status: Implemented - Prisma schema and SQLite demo seed
+- Status: Implemented - deterministic Feed Health Agent
+- Status: Implemented - deterministic Match State Agent
+- Status: Implemented - Signal feed with evidence drawers
+- Status: Implemented - Match Monitor with raw payload viewer
+- Status: Implemented - Replay Lab surface and replay API controls
+- Status: Implemented - Proof Console with safe demo fallback and real TxLINE validation route
+- Status: Implemented - Audit Log
+- Status: Implemented - Settings screen
+- Status: Implemented - clearly labeled demo mode
+- Status: Planned - long-running production TxLINE stream worker
 
 ## Why TxLINE
 
@@ -38,21 +41,23 @@ TxLINE provides fixture, score, streaming, historical replay, and stat-validatio
 
 ## Architecture
 
-Status: Planned
+Status: Implemented
 
-The documented architecture uses Next.js, TypeScript, Tailwind CSS, shadcn/ui, lucide-react, Prisma, SQLite for local MVP storage, and Server-Sent Events for app updates.
+The application uses Next.js, TypeScript, Tailwind CSS, shadcn-compatible component structure, lucide-react, Prisma, SQLite for local MVP storage, and Server-Sent Events for app updates.
 
 ## Autonomous Agents
 
-Status: Planned
+Status: Implemented
 
-Agents are deterministic. The MVP includes Feed Health, Match State, and Proof agent logic. Signals must include evidence, severity, status, source update IDs, and timestamps.
+Agents are deterministic. The MVP includes Feed Health, Match State, and Proof agent logic. Signals include evidence, severity, status, source update IDs, and timestamps.
 
 ## TxLINE Integration
 
-Status: Planned
+Status: Implemented
 
-Expected endpoints:
+Runtime client methods and the proof route are implemented. Demo mode remains active until TxLINE credentials are configured.
+
+Expected TxLINE endpoints:
 
 - `GET /api/fixtures/snapshot`
 - `GET /api/scores/snapshot/{fixtureId}`
@@ -64,30 +69,31 @@ Expected endpoints:
 
 ## Solana Verification
 
-Status: Planned
+Status: Implemented
 
-The Proof Console will request score/stat validation where supported. The app must only show `VERIFIED ON SOLANA` after a real successful verification.
+The Proof Console can store proof records and the `/api/verify/score-stat` route calls TxLINE stat validation when credentials are configured. The app only shows `VERIFIED ON SOLANA` after a real successful verification.
 
 ## Replay Mode
 
-Status: Planned
+Status: Implemented
 
-Replay mode will use historical TxLINE updates where available, with seeded fallback data only in clearly labeled demo mode.
+Replay mode uses stored updates and seeded fallback data in demo mode. Seeded data is clearly labeled and is not presented as live TxLINE data.
 
 ## Tech Stack
 
 - Next.js
 - TypeScript
 - Tailwind CSS
-- shadcn/ui
+- shadcn/ui-compatible component conventions
 - lucide-react
 - Prisma
 - SQLite
 - Server-Sent Events
+- Playwright browser smoke checks
 
 ## Project Structure
 
-Status: In Progress
+Status: Implemented
 
 ```txt
 app/
@@ -95,15 +101,20 @@ components/
 lib/
 prisma/
 docs/
+scripts/
 ```
 
 The full target structure is documented in `05_ARCHITECTURE.md`.
 
 ## Getting Started
 
-Status: Planned
+Status: Implemented
 
-Project setup has not been implemented yet. Follow `10_CODEX_HANDOFF.md` for the next build step.
+```bash
+npm install
+DATABASE_URL="file:./dev.db" npx prisma migrate dev
+DATABASE_URL="file:./dev.db" npm run dev
+```
 
 ## Environment Variables
 
@@ -111,39 +122,49 @@ See `.env.example`.
 
 ## Running Locally
 
-Status: Planned
+Status: Implemented
 
-Local run commands will be documented after the Next.js project setup is complete.
+```bash
+DATABASE_URL="file:./dev.db" npm run dev
+```
+
+Open `http://localhost:3000`.
 
 ## Demo Mode
 
-Status: Planned
+Status: Implemented
 
-Demo mode must be clearly labeled:
+Demo mode is clearly labeled:
 
 ```txt
 DEMO MODE - SEEDED FALLBACK DATA
 ```
 
-Seeded data must never be presented as live TxLINE data or real Solana verification.
+Seeded data is never presented as live TxLINE data or real Solana verification.
 
 ## Testing
 
-Status: Planned
+Status: Implemented
 
-Validation commands will be added when the application package scripts are created.
+```bash
+DATABASE_URL="file:./dev.db" npm run lint
+DATABASE_URL="file:./dev.db" npm run typecheck
+DATABASE_URL="file:./dev.db" npm test
+DATABASE_URL="file:./dev.db" npm run test:browser
+DATABASE_URL="file:./dev.db" npm run build
+```
 
 ## Deployment
 
-Status: Planned
+Status: In Progress
 
-Deployment is not configured yet.
+`render.yaml` is included for Render deployment. Configure real TxLINE credentials in Render environment variables if live integration is required.
 
 ## TxLINE Endpoints Used
 
-Status: Planned
+Status: Implemented
 
-No runtime endpoint integration has been implemented yet. Target endpoints are listed under TxLINE Integration.
+Client methods are implemented for the fixture snapshot, score snapshot, score updates, score stream parsing, historical scores, and score stat validation flows.
 
 ## Product Boundary
 
@@ -153,23 +174,22 @@ It does not recommend bets, place wagers, provide picks, calculate gambling prof
 
 ## Known Limitations
 
-- Status: Planned - application shell is not implemented yet.
-- Status: Planned - database schema is not implemented yet.
-- Status: Planned - TxLINE credentials are not configured.
-- Status: Planned - live stream integration is not implemented yet.
-- Status: Planned - proof verification is not implemented yet.
+- Status: In Progress - TxLINE credentials are not configured in this local environment.
+- Status: Planned - long-running production stream worker for hosted continuous ingestion.
+- Status: Planned - real score/stat proof verification depends on TxLINE credentials and available proof data.
+- Status: Planned - final public repository switch requires project-owner approval.
 
 ## Hackathon Submission
 
-Status: Planned
+Status: In Progress
 
 Final submission requires a public repository, deployed app, demo video, accurate setup instructions, TxLINE endpoint notes, API feedback, and a completed public-repo preparation checklist. The repository must remain private until project-owner approval.
 
 ## Feedback on TxLINE
 
-Status: Planned
+Status: In Progress
 
-Feedback will be updated after implementation experience with the TxLINE endpoints.
+The client and route surfaces are implemented. API feedback will be updated after testing with real TxLINE credentials.
 
 ## License
 

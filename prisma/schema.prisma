@@ -1,0 +1,121 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Fixture {
+  id                 String               @id @default(cuid())
+  fixtureId          String               @unique @map("fixture_id")
+  competitionId      String?              @map("competition_id")
+  participant1       String?              @map("participant_1")
+  participant2       String?              @map("participant_2")
+  participant1IsHome Boolean?             @map("participant_1_is_home")
+  startTime          DateTime?            @map("start_time")
+  status             String?
+  rawJson            String               @map("raw_json")
+  createdAt          DateTime             @default(now()) @map("created_at")
+  updatedAt          DateTime             @updatedAt @map("updated_at")
+  updates            FeedUpdate[]
+  signals            AgentSignal[]
+  verifications      VerificationResult[]
+  auditLogs          AuditLog[]
+  replaySessions     ReplaySession[]
+
+  @@index([status])
+  @@index([startTime])
+  @@map("fixtures")
+}
+
+model FeedUpdate {
+  id                String               @id @default(cuid())
+  fixtureId         String?              @map("fixture_id")
+  fixture           Fixture?             @relation(fields: [fixtureId], references: [fixtureId], onDelete: SetNull)
+  sourceType        String               @map("source_type")
+  sourceMode        String               @map("source_mode")
+  endpoint          String?
+  sequence          String?
+  providerTimestamp DateTime?            @map("provider_timestamp")
+  ingestedAt        DateTime             @default(now()) @map("ingested_at")
+  rawJson           String               @map("raw_json")
+  verifications     VerificationResult[]
+
+  @@index([fixtureId, ingestedAt])
+  @@index([sourceType, sourceMode])
+  @@index([sequence])
+  @@map("feed_updates")
+}
+
+model AgentSignal {
+  id              String   @id @default(cuid())
+  fixtureId       String?  @map("fixture_id")
+  fixture         Fixture? @relation(fields: [fixtureId], references: [fixtureId], onDelete: SetNull)
+  agentType       String   @map("agent_type")
+  severity        String
+  title           String
+  summary         String
+  evidenceJson    String   @map("evidence_json")
+  sourceUpdateIds String   @map("source_update_ids")
+  status          String   @default("open")
+  createdAt       DateTime @default(now()) @map("created_at")
+
+  @@index([fixtureId, createdAt])
+  @@index([agentType])
+  @@index([severity])
+  @@index([status])
+  @@map("agent_signals")
+}
+
+model VerificationResult {
+  id             String      @id @default(cuid())
+  fixtureId      String      @map("fixture_id")
+  fixture        Fixture     @relation(fields: [fixtureId], references: [fixtureId], onDelete: Cascade)
+  sourceUpdateId String?     @map("source_update_id")
+  sourceUpdate   FeedUpdate? @relation(fields: [sourceUpdateId], references: [id], onDelete: SetNull)
+  statKey        String?     @map("stat_key")
+  sequence       String?
+  network        String
+  status         String
+  proofJson      String?     @map("proof_json")
+  resultJson     String?     @map("result_json")
+  errorMessage   String?     @map("error_message")
+  createdAt      DateTime    @default(now()) @map("created_at")
+
+  @@index([fixtureId, createdAt])
+  @@index([status])
+  @@map("verification_results")
+}
+
+model AuditLog {
+  id           String   @id @default(cuid())
+  level        String
+  eventType    String   @map("event_type")
+  message      String
+  fixtureId    String?  @map("fixture_id")
+  fixture      Fixture? @relation(fields: [fixtureId], references: [fixtureId], onDelete: SetNull)
+  metadataJson String?  @map("metadata_json")
+  createdAt    DateTime @default(now()) @map("created_at")
+
+  @@index([createdAt])
+  @@index([eventType])
+  @@index([fixtureId])
+  @@index([level])
+  @@map("audit_logs")
+}
+
+model ReplaySession {
+  id           String    @id @default(cuid())
+  fixtureId    String    @map("fixture_id")
+  fixture      Fixture   @relation(fields: [fixtureId], references: [fixtureId], onDelete: Cascade)
+  status       String
+  speed        Float     @default(1)
+  startedAt    DateTime? @map("started_at")
+  endedAt      DateTime? @map("ended_at")
+  currentIndex Int       @default(0) @map("current_index")
+
+  @@index([fixtureId, status])
+  @@map("replay_sessions")
+}

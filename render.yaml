@@ -1,0 +1,26 @@
+services:
+  - type: web
+    name: matchproof
+    runtime: node
+    plan: free
+    buildCommand: npm ci && npx prisma generate && npx prisma migrate deploy && npx prisma db seed && npm run build
+    startCommand: npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: NEXT_PUBLIC_APP_NAME
+        value: MatchProof
+      - key: NEXT_PUBLIC_APP_ENV
+        value: production
+      - key: DATABASE_URL
+        value: file:./dev.db
+      - key: ENABLE_DEMO_MODE
+        value: "true"
+      - key: TXLINE_NETWORK
+        value: devnet
+      - key: TXLINE_API_ORIGIN
+        value: https://txline-dev.txodds.com
+      - key: TXLINE_API_BASE_URL
+        value: https://txline-dev.txodds.com/api
+      - key: SOLANA_RPC_URL
+        value: https://api.devnet.solana.com

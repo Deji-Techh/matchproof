@@ -1,0 +1,72 @@
+{
+  "name": "matchproof",
+  "version": "1.0.0",
+  "description": "Autonomous TxLINE-powered monitoring, replay, verification, and audit console for live World Cup data.",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "prisma generate && next build",
+    "start": "next start",
+    "lint": "eslint .",
+    "typecheck": "tsc --noEmit",
+    "test": "tsx scripts/smoke-test.ts",
+    "test:browser": "tsx scripts/browser-smoke.ts",
+    "prisma:generate": "prisma generate",
+    "prisma:format": "prisma format",
+    "prisma:validate": "prisma validate",
+    "prisma:migrate": "prisma migrate dev",
+    "prisma:seed": "tsx prisma/seed.ts"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Deji-Tech/matchproof.git"
+  },
+  "keywords": [
+    "txline",
+    "txodds",
+    "solana",
+    "world-cup",
+    "sports-data",
+    "data-integrity",
+    "monitoring",
+    "verification",
+    "replay",
+    "nextjs",
+    "typescript",
+    "hackathon"
+  ],
+  "author": "Deji-Tech",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Deji-Tech/matchproof/issues"
+  },
+  "homepage": "https://github.com/Deji-Tech/matchproof#readme",
+  "overrides": {
+    "postcss": "^8.5.16"
+  },
+  "dependencies": {
+    "@prisma/client": "^6.19.3",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
+    "lucide-react": "^1.23.0",
+    "next": "^16.2.10",
+    "react": "^19.2.7",
+    "react-dom": "^19.2.7",
+    "tailwind-merge": "^3.6.0",
+    "zod": "^4.4.3"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.61.1",
+    "@tailwindcss/postcss": "^4.3.2",
+    "@types/node": "^26.1.0",
+    "@types/react": "^19.2.17",
+    "@types/react-dom": "^19.2.3",
+    "eslint": "^9.39.4",
+    "eslint-config-next": "^16.2.10",
+    "postcss": "^8.5.16",
+    "prisma": "^6.19.3",
+    "tailwindcss": "^4.3.2",
+    "tsx": "^4.23.0",
+    "typescript": "^6.0.3"
+  }
+}
