@@ -2,6 +2,7 @@ import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
 
 const dateTimeFormatter = new Intl.DateTimeFormat("en", {
+  timeZone: "UTC",
   month: "short",
   day: "2-digit",
   hour: "2-digit",
