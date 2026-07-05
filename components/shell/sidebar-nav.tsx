@@ -16,6 +16,7 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { StatusBadge } from "@/components/ui/status-badge";
+import type { getSafeTxlineStatus } from "@/lib/txline/auth";
 
 const items = [
   { href: "/command-center", label: "Command Center", icon: LayoutDashboard },
@@ -28,11 +29,12 @@ const items = [
   { href: "/settings", label: "Settings", icon: Settings },
 ];
 
-export function SidebarNav() {
+export function SidebarNav({ txline }: { txline: ReturnType<typeof getSafeTxlineStatus> }) {
   const pathname = usePathname();
+  const streamReady = txline.hasGuestJwt && txline.hasApiToken;
 
   return (
-    <aside className="sticky top-24 hidden h-[calc(100vh-96px)] w-64 shrink-0 flex-col justify-between bg-[var(--bg-panel)] p-3 md:flex">
+    <aside className="fixed left-0 top-[100px] z-20 hidden h-[calc(100vh-100px)] w-64 shrink-0 flex-col justify-between overflow-y-auto bg-[var(--bg-panel)] p-3 md:flex">
       <nav className="space-y-1">
         {items.map((item) => {
           const active = pathname === item.href || pathname.startsWith(`${item.href}/`);
@@ -67,14 +69,14 @@ export function SidebarNav() {
             <Cable className="h-3.5 w-3.5" />
             Network
           </span>
-          <StatusBadge variant="info">Devnet</StatusBadge>
+          <StatusBadge variant="info">{txline.network}</StatusBadge>
         </div>
         <div className="flex items-center justify-between gap-2 text-xs text-[var(--text-muted)]">
           <span className="flex items-center gap-2">
             <Radio className="h-3.5 w-3.5" />
             Score stream
           </span>
-          <StatusBadge variant="warning">Demo</StatusBadge>
+          <StatusBadge variant={streamReady ? "success" : "warning"}>{streamReady ? "Live" : "Fallback"}</StatusBadge>
         </div>
         <p className="mono text-[11px] text-[var(--text-muted)]">v0.1.0</p>
       </div>

@@ -10,13 +10,22 @@ import { ExportJsonButton } from "@/components/export/export-json-button";
 import { PageHeader, SectionShell } from "@/components/ui/page-header";
 import { getCommandCenterData } from "@/lib/db/queries";
 import { DEMO_MODE_LABEL } from "@/lib/demo-data";
+import { getSafeTxlineStatus } from "@/lib/txline/auth";
 import { formatDateTime } from "@/lib/utils";
 
 export const dynamic = "force-dynamic";
 
 export default async function CommandCenterPage() {
   const data = await getCommandCenterData();
-  const ingestFixture = data.fixtures.find((fixture) => fixture.status === "live") ?? data.fixtures.find((fixture) => fixture.updates.length > 0);
+  const txline = getSafeTxlineStatus();
+  const isLiveMode = process.env.ENABLE_DEMO_MODE !== "true";
+  const hasCredentials = txline.hasGuestJwt && txline.hasApiToken;
+  const streamHealth = isLiveMode ? (hasCredentials ? "Ready" : "Blocked") : "Demo";
+  const streamTone = isLiveMode ? (hasCredentials ? "success" : "danger") : "warning";
+  const ingestFixture =
+    data.fixtures.find((fixture) => fixture.status === "live") ??
+    data.fixtures.find((fixture) => fixture.updates.length > 0) ??
+    data.fixtures[0];
 
   return (
     <main className="space-y-5">
@@ -28,14 +37,20 @@ export default async function CommandCenterPage() {
       >
         <ExportJsonButton />
       </PageHeader>
-      <section className="panel reveal-up border-[var(--warning)]/30 p-4 text-sm text-yellow-100">
-        <StatusBadge variant="warning">{DEMO_MODE_LABEL}</StatusBadge>
+      <section className="panel reveal-up border-[var(--border-subtle)] p-4 text-sm">
+        <StatusBadge variant={isLiveMode ? (hasCredentials ? "success" : "danger") : "warning"}>
+          {isLiveMode ? (hasCredentials ? "LIVE TXLINE MODE" : "LIVE MODE - CREDENTIALS MISSING") : DEMO_MODE_LABEL}
+        </StatusBadge>
         <span className="ml-3 text-[var(--text-secondary)]">
-          Seeded fallback data is active until TxLINE credentials are configured.
+          {isLiveMode
+            ? hasCredentials
+              ? "Credentials are configured. Use the operator key below to sync fixtures and score evidence."
+              : "Set TxLINE guest JWT and API token before live ingestion."
+            : "Seeded fallback data is active until live mode is enabled."}
         </span>
       </section>
       <section className="grid gap-4 md:grid-cols-3">
-        <MetricCard title="Stream Health" value="Demo" detail={`Last update ${formatDateTime(data.latestUpdate?.ingestedAt)}`} icon={Radio} tone="warning" />
+        <MetricCard title="Stream Health" value={streamHealth} detail={`Last update ${formatDateTime(data.latestUpdate?.ingestedAt)}`} icon={Radio} tone={streamTone} />
         <MetricCard title="Agent Runtime" value={data.signals.length} detail="Evidence-backed deterministic signals" icon={Siren} tone="info" />
         <MetricCard title="Proof Summary" value={data.verifications.length} detail="Proof requests and placeholders" icon={ShieldCheck} tone="proof" />
       </section>

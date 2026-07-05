@@ -1,12 +1,15 @@
 import { Cable, Database, Radio, Settings } from "lucide-react";
 import { StatusBadge } from "@/components/ui/status-badge";
 import { PageHeader } from "@/components/ui/page-header";
+import { ModeControl } from "@/components/settings/mode-control";
 import { getSafeTxlineStatus } from "@/lib/txline/auth";
 
 export const dynamic = "force-dynamic";
 
 export default function SettingsPage() {
   const txline = getSafeTxlineStatus();
+  const mode = process.env.ENABLE_DEMO_MODE === "true" ? "demo" : "live";
+  const hasCredentials = txline.hasGuestJwt && txline.hasApiToken;
 
   return (
     <main className="space-y-5">
@@ -16,6 +19,7 @@ export default function SettingsPage() {
         title="Settings"
         detail="Configuration status, network consistency, stream settings, and deterministic thresholds."
       />
+      <ModeControl mode={mode} hasCredentials={hasCredentials} />
       <section className="grid gap-4 lg:grid-cols-3">
         <Panel icon={Cable} title="TxLINE Credentials">
           <Row label="Guest JWT" value={txline.guestJwt} />

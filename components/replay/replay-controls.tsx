@@ -21,7 +21,7 @@ export function ReplayControls({
   const [speed, setSpeed] = useState(1);
   const [status, setStatus] = useState(initialStatus ?? "idle");
   const [currentIndex, setCurrentIndex] = useState(initialIndex);
-  const [message, setMessage] = useState("Replay controls ready");
+  const [message, setMessage] = useState(initialStatus ? `Replay ${initialStatus}` : "Replay controls ready");
   const [pending, setPending] = useState(false);
 
   async function postReplay(action: "start" | "pause" | "resume" | "reset" | "step") {
@@ -61,6 +61,7 @@ export function ReplayControls({
             disabled={pending}
             onClick={() => postReplay(status === "paused" ? "resume" : "start")}
             className="interactive-panel grid min-h-10 min-w-10 place-items-center border border-[var(--border-subtle)] p-2 disabled:opacity-50"
+            aria-label={status === "paused" ? "Resume replay" : "Start replay"}
             title={status === "paused" ? "Resume replay" : "Start replay"}
             type="button"
           >
@@ -70,6 +71,7 @@ export function ReplayControls({
             disabled={pending}
             onClick={() => postReplay("pause")}
             className="interactive-panel grid min-h-10 min-w-10 place-items-center border border-[var(--border-subtle)] p-2 disabled:opacity-50"
+            aria-label="Pause replay"
             title="Pause replay"
             type="button"
           >
@@ -79,6 +81,7 @@ export function ReplayControls({
             disabled={pending}
             onClick={() => postReplay("reset")}
             className="interactive-panel grid min-h-10 min-w-10 place-items-center border border-[var(--border-subtle)] p-2 disabled:opacity-50"
+            aria-label="Reset replay"
             title="Reset replay"
             type="button"
           >
@@ -88,6 +91,7 @@ export function ReplayControls({
             disabled={pending || status === "completed"}
             onClick={() => postReplay("step")}
             className="interactive-panel grid min-h-10 min-w-10 place-items-center border border-[var(--border-subtle)] p-2 disabled:opacity-50"
+            aria-label="Advance replay"
             title="Advance replay"
             type="button"
           >
@@ -97,6 +101,7 @@ export function ReplayControls({
             disabled={pending}
             onClick={() => postReplay("reset")}
             className="interactive-panel grid min-h-10 min-w-10 place-items-center border border-[var(--border-subtle)] p-2 disabled:opacity-50"
+            aria-label="Clear session"
             title="Clear session"
             type="button"
           >

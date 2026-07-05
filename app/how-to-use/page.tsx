@@ -148,7 +148,8 @@ TXLINE_API_TOKEN=<activated token>`}
         <TerminalPanel
           title="Configure Render live mode"
           detail="Set these as Render environment variables. Keep secrets out of Git and chat."
-          commands={`TXLINE_NETWORK=mainnet
+          commands={`DATABASE_URL=postgresql://postgres.<project-ref>:<password>@aws-0-<region>.pooler.supabase.com:6543/postgres?pgbouncer=true
+TXLINE_NETWORK=mainnet
 TXLINE_SERVICE_LEVEL=12
 TXLINE_API_ORIGIN=https://txline.txodds.com
 TXLINE_API_BASE_URL=https://txline.txodds.com/api
@@ -180,11 +181,11 @@ curl -X POST https://matchproof.onrender.com/api/ingest/stream-worker \\
         <TerminalPanel
           title="Run validation checks"
           detail="These are the checks used before shipping the hackathon build."
-          commands={`DATABASE_URL="file:./dev.db" ENABLE_DEMO_MODE=true npm run lint
-DATABASE_URL="file:./dev.db" ENABLE_DEMO_MODE=true npm run typecheck
-DATABASE_URL="file:./dev.db" ENABLE_DEMO_MODE=true npm test
-DATABASE_URL="file:./dev.db" ENABLE_DEMO_MODE=true npx prisma validate
-DATABASE_URL="file:./dev.db" ENABLE_DEMO_MODE=true npm run build
+          commands={`npm run lint
+npm run typecheck
+npm test
+npx prisma validate
+npm run build
 PLAYWRIGHT_BASE_URL=https://matchproof.onrender.com npm run test:browser`}
           output={`Smoke tests passed
 Browser smoke passed

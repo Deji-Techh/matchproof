@@ -25,8 +25,20 @@ const kickoffFormatter = new Intl.DateTimeFormat("en", {
 
 export function MatchTicker({ fixtures }: { fixtures: FixtureRow[] }) {
   const items = useMemo(() => buildTickerItems(fixtures), [fixtures]);
-  const visibleItems = items.length > 0 ? items : [{ section: "current" as const, text: "No stored match state" }];
-  const tickerItems = [...visibleItems, ...visibleItems, ...visibleItems];
+
+  if (items.length === 0) {
+    return (
+      <div className="live-strip flex h-9 items-center px-4 text-[11px] font-black uppercase text-[var(--text-secondary)]">
+        <span className="flex items-center gap-2 whitespace-nowrap">
+          <span className="h-1.5 w-1.5 rounded-sm bg-[var(--warning)]" />
+          <span className="text-[var(--text-muted)]">Waiting</span>
+          <span>No stored fixtures yet - sync TxLINE fixtures from Command Center</span>
+        </span>
+      </div>
+    );
+  }
+
+  const tickerItems = [...items, ...items, ...items];
 
   return (
     <div className="live-strip h-9">

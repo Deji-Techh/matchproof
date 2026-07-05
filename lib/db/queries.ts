@@ -12,7 +12,7 @@ export async function getHealthSummary() {
   ]);
 
   return {
-    mode: process.env.ENABLE_DEMO_MODE === "false" ? "live" : "demo",
+    mode: process.env.ENABLE_DEMO_MODE === "true" ? "demo" : "live",
     fixtureCount,
     updateCount,
     signalCount,

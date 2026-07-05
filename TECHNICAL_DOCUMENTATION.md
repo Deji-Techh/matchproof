@@ -42,7 +42,7 @@ GET /api/scores/historical/{fixtureId}
 GET /api/scores/stat-validation
 ```
 
-The hosted demo remains in demo mode until `TXLINE_GUEST_JWT` and `TXLINE_API_TOKEN` are activated and configured.
+The hosted deployment can run in demo or live mode. `ENABLE_DEMO_MODE=true` seeds labeled fallback data. `ENABLE_DEMO_MODE=false` uses real TxLINE ingestion controls with server-side credentials. Any non-`true` value is treated as live mode.
 
 ## Data Flow
 
@@ -90,7 +90,10 @@ Proof Agent:
 
 ## Storage
 
-The MVP uses Prisma with SQLite for demo deployment simplicity.
+MatchProof uses Prisma with two database paths:
+
+- Live / Render: Supabase hosted Postgres using `prisma/schema.prisma` and the tracked Postgres migrations.
+- Local/offline demo: SQLite using `prisma/schema.sqlite.prisma` and `npm run dev:demo`.
 
 Main models:
 
@@ -101,7 +104,10 @@ Main models:
 - `ReplaySession`
 - `AuditLog`
 
-For longer-running live evidence retention, move `DATABASE_URL` to Render PostgreSQL, Neon, or Supabase Postgres.
+`ENABLE_DEMO_MODE` controls data behavior, not the generated Prisma provider at runtime. Use the Settings Mode Control panel to trigger the active data path:
+
+- Demo mode: `ENABLE_DEMO_MODE=true` seeds fallback data.
+- Live mode: `ENABLE_DEMO_MODE=false` syncs real TxLINE fixtures using the operator key.
 
 ## Operator Security
 
@@ -125,8 +131,8 @@ POST /api/signals/[id]/acknowledge
 ## Demo Video Flow
 
 1. Open the landing page and Command Center.
-2. Show demo mode label and TxLINE service-level-12 configuration in Settings.
-3. Run fixture sync or score ingestion without credentials to show safe audit logging.
+2. Show the Settings Mode Control panel and TxLINE service-level-12 configuration.
+3. In demo mode, trigger fallback seeding; in live mode, enter the operator key and trigger TxLINE fixture sync.
 4. Show seeded fixtures, raw payloads, and agent signals.
 5. Open a fixture monitor and inspect evidence.
 6. Run Replay Lab through start, step, pause, and reset.
@@ -144,8 +150,8 @@ https://matchproof.onrender.com
 Required Render environment variables:
 
 ```txt
-DATABASE_URL=file:./dev.db
-ENABLE_DEMO_MODE=true
+DATABASE_URL=postgresql://postgres.<project-ref>:<password>@aws-0-<region>.pooler.supabase.com:6543/postgres?pgbouncer=true
+ENABLE_DEMO_MODE=false
 ENABLE_PUBLIC_EXPORT=false
 TXLINE_NETWORK=mainnet
 TXLINE_SERVICE_LEVEL=12
@@ -171,24 +177,30 @@ Fetch a fresh TxLINE guest JWT for the activation flow:
 npm run txline:env -- --guest-jwt
 ```
 
-Switch `ENABLE_DEMO_MODE=false` only after the activated TxLINE credentials are configured and tested.
+For local SQLite demo mode, run:
+
+```bash
+npm run dev:demo
+```
+
+Switch Render to `ENABLE_DEMO_MODE=false` only after Supabase Postgres, activated TxLINE credentials, and `MATCHPROOF_OPERATOR_KEY` are configured.
 
 ## Validation
 
 Local validation commands:
 
 ```bash
-DATABASE_URL="file:./dev.db" ENABLE_DEMO_MODE=true npm run lint
-DATABASE_URL="file:./dev.db" ENABLE_DEMO_MODE=true npm run typecheck
-DATABASE_URL="file:./dev.db" ENABLE_DEMO_MODE=true npm test
-DATABASE_URL="file:./dev.db" ENABLE_DEMO_MODE=true npx prisma validate
-DATABASE_URL="file:./dev.db" ENABLE_DEMO_MODE=true npm run build
-DATABASE_URL="file:./dev.db" ENABLE_DEMO_MODE=true npm run test:browser
+npm run lint
+npm run typecheck
+npm test
+npx prisma validate
+npm run build
+npm run test:browser
 ```
 
 ## Known Limitations
 
 - Activated TxLINE service-level-12 credentials are required before the hosted worker can ingest real live stream events.
 - Independent local/on-chain Solana proof verification is pending; current proof flow records TxLINE validation responses as proof material.
-- SQLite is acceptable for the hackathon demo but should be replaced with managed Postgres for durable production evidence.
+- Supabase Postgres is required for durable hosted evidence storage; SQLite remains available only for local/offline demo mode.
 - In-memory rate limiting is demo protection only.

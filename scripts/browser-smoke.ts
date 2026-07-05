@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import { chromium, type ConsoleMessage } from "@playwright/test";
 
-const baseUrl = process.env.PLAYWRIGHT_BASE_URL ?? "http://127.0.0.1:3000";
+const baseUrl = process.env.PLAYWRIGHT_BASE_URL ?? "http://localhost:3000";
 const allowedConsoleNoise = ["Download the React DevTools"];
 
 async function main() {
@@ -39,13 +39,13 @@ async function main() {
   }
 
   await page.goto(`${baseUrl}/replay-lab`, { waitUntil: "networkidle" });
-  await page.getByTitle("Start replay").click();
+  await page.getByRole("button", { name: "Start replay" }).click();
   await page.getByText("Replay running", { exact: false }).waitFor({ state: "visible", timeout: 10_000 });
-  await page.getByTitle("Advance replay").click();
+  await page.getByRole("button", { name: "Advance replay" }).click();
   await page.getByText("1/", { exact: false }).waitFor({ state: "visible", timeout: 10_000 });
-  await page.getByTitle("Pause replay").click();
+  await page.getByRole("button", { name: "Pause replay" }).click();
   await page.getByText("Replay paused", { exact: false }).waitFor({ state: "visible", timeout: 10_000 });
-  await page.getByTitle("Reset replay").click();
+  await page.getByRole("button", { name: "Reset replay" }).click();
   await page.getByText("Replay idle", { exact: false }).waitFor({ state: "visible", timeout: 10_000 });
 
   await page.goto(`${baseUrl}/signals`, { waitUntil: "networkidle" });

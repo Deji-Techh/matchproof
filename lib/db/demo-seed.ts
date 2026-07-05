@@ -11,7 +11,7 @@ import {
 let seeded = false;
 
 export async function ensureDemoData() {
-  if (process.env.ENABLE_DEMO_MODE === "false") return;
+  if (process.env.ENABLE_DEMO_MODE !== "true") return;
   if (process.env.NEXT_PHASE === "phase-production-build") return;
   if (seeded) return;
 

@@ -22,7 +22,7 @@ export function ShellFrame({
       {topBar}
       <div className="flex">
         {sidebar}
-        <div className="min-w-0 flex-1 border-l border-[var(--border-subtle)]">
+        <div className="min-w-0 flex-1 border-l border-[var(--border-subtle)] md:ml-64">
           <div className="mx-auto max-w-[1540px] p-4 sm:p-5 lg:p-6">{children}</div>
         </div>
       </div>

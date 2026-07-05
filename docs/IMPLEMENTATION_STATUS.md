@@ -42,14 +42,21 @@
 - [x] Service-level-12 mainnet TxLINE configuration documented
 - [x] How to Use operator guide
 - [x] Render npm lockfile compatibility fix
+- [x] Live-mode operator key UI for ingestion controls
+- [x] Fixed sidebar shell layout
+- [x] Empty match ticker state
+- [x] Direct TxLINE fixture and score snapshot verification
+- [x] Supabase Postgres live datasource schema
+- [x] SQLite local demo datasource schema
+- [x] Settings Mode Control trigger for demo seed/live ingestion
 
 ## In Progress
 
-None.
+- [ ] Supabase Postgres Render deployment verification
 
 ## Planned
 
-- [ ] Activated TxLINE service-level-12 credential configuration
+- [x] Activated TxLINE service-level-12 credential configuration
 - [ ] Hosted stream worker run with activated TxLINE credentials
 - [ ] Independent local/on-chain Solana proof verification
 
@@ -59,15 +66,17 @@ None.
 
 ## Last Validation
 
-- Lint: Passed - `DATABASE_URL="file:./dev.db" ENABLE_DEMO_MODE=true npm run lint`
-- Typecheck: Passed - `DATABASE_URL="file:./dev.db" ENABLE_DEMO_MODE=true npm run typecheck`
-- Build: Passed - `DATABASE_URL="file:./dev.db" ENABLE_DEMO_MODE=true npm run build`
-- Tests: Passed - `DATABASE_URL="file:./dev.db" ENABLE_DEMO_MODE=true npm test`
+- Lint: Passed - `npm run lint`
+- Typecheck: Passed - `npm run typecheck`
+- Build: Passed - `DATABASE_URL="postgresql://user:pass@localhost:5432/matchproof" ENABLE_DEMO_MODE=true npm run build`
+- Tests: Passed - `npm test`
 - Install: Passed - `npm ci --include=dev`
-- Browser: Passed - `PLAYWRIGHT_BASE_URL=http://localhost:3000 DATABASE_URL="file:./dev.db" ENABLE_DEMO_MODE=true npm run test:browser`
-- Prisma: Passed - `DATABASE_URL="file:./dev.db" ENABLE_DEMO_MODE=true npx prisma validate`
+- Browser: Passed - `npm run test:browser` against local SQLite demo server
+- Prisma: Passed - default Postgres schema and SQLite demo schema both validated
 - React Doctor: Passed - `npx -y react-doctor@latest . --verbose --scope changed` returned 100/100
-- Audit: Passed - `npm audit --audit-level=moderate`
+- Audit: Critical passed - `npm audit --audit-level=critical`; moderate audit still reports upstream Solana dependency advisories in `@solana/web3.js` / `@solana/spl-token`
+- Direct TxLINE API: Passed - fixture snapshot returned 10 rows; World Cup score snapshot returned 2 rows for fixture `18187298`
+- Local Live Ingestion: Passed - protected fixture ingestion stored 10 rows; protected score snapshot ingestion stored 2 rows
 - Render Deploy: Pending after commit/push
 - Deployed Health: Pending after deploy
 - Deployed Browser: Pending after deploy

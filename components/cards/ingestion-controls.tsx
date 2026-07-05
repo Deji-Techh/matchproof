@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { CalendarSync, DatabaseZap, History, Radio, RefreshCcw, Square } from "lucide-react";
+import { CalendarSync, DatabaseZap, History, KeyRound, Radio, RefreshCcw, Square } from "lucide-react";
 import { StatusBadge } from "@/components/ui/status-badge";
 
 type ActionState = {
@@ -12,6 +12,7 @@ type ActionState = {
 
 export function IngestionControls({ fixtureId }: { fixtureId?: string }) {
   const router = useRouter();
+  const [operatorKey, setOperatorKey] = useState("");
   const [state, setState] = useState<ActionState>({
     status: "idle",
     message: "Ingestion controls ready",
@@ -19,14 +20,15 @@ export function IngestionControls({ fixtureId }: { fixtureId?: string }) {
 
   async function run(action: "fixtures" | "snapshot" | "updates" | "historical" | "stream" | "worker-start" | "worker-stop") {
     setState({ status: "pending", message: "Request in progress" });
+    const headers = requestHeaders(operatorKey);
 
     const request =
       action === "fixtures"
-        ? fetch("/api/ingest/fixtures", { method: "POST" })
+        ? fetch("/api/ingest/fixtures", { method: "POST", headers })
         : action === "worker-start" || action === "worker-stop"
           ? fetch("/api/ingest/stream-worker", {
               method: "POST",
-              headers: { "Content-Type": "application/json" },
+              headers: { ...headers, "Content-Type": "application/json" },
               body: JSON.stringify(
                 action === "worker-start"
                   ? { action: "start", fixtureId, captureWindowMs: 30_000, maxMessages: 25 }
@@ -36,12 +38,12 @@ export function IngestionControls({ fixtureId }: { fixtureId?: string }) {
         : action === "stream"
           ? fetch("/api/ingest/stream", {
               method: "POST",
-              headers: { "Content-Type": "application/json" },
+              headers: { ...headers, "Content-Type": "application/json" },
               body: JSON.stringify({ fixtureId, maxMessages: 8, maxDurationMs: 10_000 }),
             })
         : fetch("/api/ingest/scores", {
             method: "POST",
-            headers: { "Content-Type": "application/json" },
+            headers: { ...headers, "Content-Type": "application/json" },
             body: JSON.stringify({ fixtureId, mode: action }),
           });
 
@@ -89,13 +91,27 @@ export function IngestionControls({ fixtureId }: { fixtureId?: string }) {
         <div>
           <h2 className="text-sm font-black uppercase">TxLINE Ingestion</h2>
           <p className="mt-1 text-xs text-[var(--text-secondary)]">
-            Credentials stay server-side; failed live calls create audit evidence.
+            Credentials stay server-side; live mutations require the Render operator key.
           </p>
         </div>
         <StatusBadge variant={state.status === "ok" ? "success" : state.status === "review" ? "warning" : "neutral"}>
           {state.status}
         </StatusBadge>
       </div>
+      <label className="mt-4 flex flex-col gap-2 text-xs font-semibold uppercase text-[var(--text-muted)]">
+        Operator key
+        <span className="flex items-center gap-2 border border-[var(--border-subtle)] bg-[var(--bg-main)] px-3 py-2">
+          <KeyRound className="h-4 w-4 text-[var(--accent-primary)]" />
+          <input
+            value={operatorKey}
+            onChange={(event) => setOperatorKey(event.target.value)}
+            type="password"
+            autoComplete="off"
+            placeholder="Paste MATCHPROOF_OPERATOR_KEY for live ingestion"
+            className="min-w-0 flex-1 bg-transparent text-sm normal-case text-[var(--text-primary)] outline-none placeholder:text-[var(--text-muted)]"
+          />
+        </span>
+      </label>
       <div className="mt-4 grid gap-2 sm:flex sm:flex-wrap sm:items-center">
         <ControlButton disabled={disabled} icon={CalendarSync} label="Sync fixtures" onClick={() => run("fixtures")} />
         <ControlButton disabled={disabled || !fixtureId} icon={RefreshCcw} label="Score snapshot" onClick={() => run("snapshot")} />
@@ -110,6 +126,11 @@ export function IngestionControls({ fixtureId }: { fixtureId?: string }) {
       </p>
     </section>
   );
+}
+
+function requestHeaders(operatorKey: string): Record<string, string> {
+  const trimmed = operatorKey.trim();
+  return trimmed ? { "x-matchproof-operator-key": trimmed } : {};
 }
 
 function ControlButton({

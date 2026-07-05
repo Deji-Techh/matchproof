@@ -17,7 +17,7 @@ export async function GET() {
       controller.enqueue(
         encode("status", {
           app: "MatchProof",
-          mode: process.env.ENABLE_DEMO_MODE === "false" ? "live" : "demo",
+          mode: process.env.ENABLE_DEMO_MODE === "true" ? "demo" : "live",
           streamStatus: "connected",
           at: openedAt,
         }),
