@@ -130,11 +130,10 @@ app/
 components/
 lib/
 prisma/
-docs/
 scripts/
 ```
 
-The full target structure is documented in `05_ARCHITECTURE.md`.
+Hackathon technical details are summarized in `TECHNICAL_DOCUMENTATION.md`.
 
 ## Getting Started
 

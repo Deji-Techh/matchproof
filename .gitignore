@@ -40,6 +40,20 @@ docs.yaml
 llms.txt
 ChatGPT Image*.png
 
+# Internal planning docs not tracked in the public hackathon repo
+00_INDEX.md
+01_PROJECT_BRIEF.md
+02_SOURCES_REVIEW.md
+03_PRODUCT_REQUIREMENTS.md
+04_TXLINE_INTEGRATION.md
+05_ARCHITECTURE.md
+06_AGENTS_AND_LOGIC.md
+07_UI_UX_GUIDE.md
+08_COMPLIANCE_DOS_DONTS.md
+09_DEMO_AND_SUBMISSION.md
+10_CODEX_HANDOFF.md
+AGENTS.md
+
 # Test and coverage output
 coverage/
 playwright-report/
