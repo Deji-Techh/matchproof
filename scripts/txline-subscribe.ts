@@ -13,6 +13,7 @@ import {
 import {
   ASSOCIATED_TOKEN_PROGRAM_ID,
   TOKEN_2022_PROGRAM_ID,
+  createAssociatedTokenAccountIdempotentInstruction,
   getAssociatedTokenAddressSync,
 } from "@solana/spl-token";
 
@@ -73,7 +74,16 @@ const instruction = new TransactionInstruction({
   data,
 });
 
-const transaction = new Transaction().add(instruction);
+const createUserTokenAccountInstruction = createAssociatedTokenAccountIdempotentInstruction(
+  wallet.publicKey,
+  userTokenAccount,
+  wallet.publicKey,
+  TXL_TOKEN_MINT,
+  TOKEN_2022_PROGRAM_ID,
+  ASSOCIATED_TOKEN_PROGRAM_ID,
+);
+
+const transaction = new Transaction().add(createUserTokenAccountInstruction, instruction);
 transaction.feePayer = wallet.publicKey;
 
 console.log(`Wallet: ${wallet.publicKey.toBase58()}`);
