@@ -10,6 +10,15 @@ MatchProof is not a betting, wagering, gambling, prediction-market, or trading p
 
 MatchProof targets the TxODDS World Cup "Prediction Markets and Settlement" track without adding wagering functionality. The project focuses on the data integrity and verification layer that settlement or analytics systems need before they can trust a match update.
 
+## Business and Technical Highlights
+
+- Evidence-first World Cup data console powered by TxLINE as the primary data source.
+- Real fixture and score ingestion with raw payload retention for auditability.
+- Deterministic agents for feed health, fixture-scoped duplicate detection, match-state changes, and proof-request status.
+- Replay Lab for walking judges through stored score updates even when live matches are not active during review.
+- Proof Console records TxLINE score/stat validation responses as proof material without overclaiming independent Solana validation.
+- Live mode uses Supabase Postgres for durable hosted evidence storage; local demo mode remains available with SQLite.
+
 ## TxLINE Configuration
 
 Target free tier:
@@ -133,11 +142,11 @@ POST /api/signals/[id]/acknowledge
 1. Open the landing page and Command Center.
 2. Show the Settings Mode Control panel and TxLINE service-level-12 configuration.
 3. In demo mode, trigger fallback seeding; in live mode, enter the operator key and trigger TxLINE fixture sync.
-4. Show seeded fixtures, raw payloads, and agent signals.
+4. Show real TxLINE fixtures in live mode, or clearly labeled seeded fixtures if recording an offline demo.
 5. Open a fixture monitor and inspect evidence.
 6. Run Replay Lab through start, step, pause, and reset.
 7. Open Proof Console and explain `proof_received` vs independent Solana verification.
-8. Show Audit Log and JSON evidence export.
+8. Show Audit Log. In live mode, explain that JSON export is intentionally guarded unless `ENABLE_PUBLIC_EXPORT=true`.
 
 ## Deployment
 
@@ -201,7 +210,8 @@ npm run test:browser
 
 ## Known Limitations
 
-- Activated TxLINE service-level-12 credentials are required before the hosted worker can ingest real live stream events.
+- Hosted stream ingestion depends on active TxLINE score events; scheduled fixtures may return score snapshots without live stream messages yet.
 - Independent local/on-chain Solana proof verification is pending; current proof flow records TxLINE validation responses as proof material.
+- TxLINE score/stat proof validation requires a real stat key from a fixture with non-empty `Stats`; scheduled fixtures may not have proofable stats yet.
 - Supabase Postgres is required for durable hosted evidence storage; SQLite remains available only for local/offline demo mode.
 - In-memory rate limiting is demo protection only.
