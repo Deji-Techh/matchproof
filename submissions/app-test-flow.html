@@ -1,0 +1,280 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>MatchProof App Test Flow</title>
+    <style>
+      @page {
+        size: A4;
+        margin: 18mm;
+      }
+
+      body {
+        margin: 0;
+        color: #151515;
+        font-family: Arial, Helvetica, sans-serif;
+        font-size: 11pt;
+        line-height: 1.5;
+      }
+
+      h1,
+      h2,
+      h3 {
+        margin: 0;
+        line-height: 1.2;
+      }
+
+      h1 {
+        font-size: 26pt;
+        letter-spacing: 0;
+      }
+
+      h2 {
+        margin-top: 22px;
+        border-bottom: 1px solid #d7d7d7;
+        padding-bottom: 5px;
+        font-size: 15pt;
+      }
+
+      h3 {
+        margin-top: 16px;
+        font-size: 12pt;
+      }
+
+      p {
+        margin: 8px 0;
+      }
+
+      ul,
+      ol {
+        margin-top: 8px;
+        padding-left: 22px;
+      }
+
+      li {
+        margin: 5px 0;
+      }
+
+      code,
+      pre {
+        border-radius: 4px;
+        background: #f2f2f2;
+        font-family: "Courier New", Courier, monospace;
+        font-size: 9.5pt;
+      }
+
+      code {
+        padding: 1px 4px;
+      }
+
+      pre {
+        overflow-wrap: break-word;
+        white-space: pre-wrap;
+        padding: 10px;
+      }
+
+      .cover {
+        border-bottom: 3px solid #111;
+        margin-bottom: 18px;
+        padding-bottom: 14px;
+      }
+
+      .subtitle {
+        margin-top: 8px;
+        color: #555;
+        font-size: 12pt;
+      }
+
+      .meta {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 8px;
+        margin-top: 14px;
+      }
+
+      .meta div,
+      .callout {
+        border: 1px solid #d9d9d9;
+        background: #fafafa;
+        padding: 10px;
+      }
+
+      .step {
+        break-inside: avoid;
+        border-left: 4px solid #111;
+        margin-top: 14px;
+        padding-left: 12px;
+      }
+
+      .expected {
+        border-left: 3px solid #16a34a;
+        margin-top: 7px;
+        padding-left: 10px;
+      }
+
+      .warning {
+        border-left-color: #ca8a04;
+      }
+
+      .small {
+        color: #555;
+        font-size: 9.5pt;
+      }
+    </style>
+  </head>
+  <body>
+    <section class="cover">
+      <h1>MatchProof App Test Flow</h1>
+      <p class="subtitle">Step-by-step verification checklist for the deployed TxLINE-powered World Cup data console.</p>
+      <div class="meta">
+        <div><strong>App URL</strong><br />https://matchproof.onrender.com</div>
+        <div><strong>Mode</strong><br />Live TxLINE mode, service level 12</div>
+      </div>
+    </section>
+
+    <section class="callout">
+      <strong>Private judge/operator note:</strong> live mutations require the temporary <code>MATCHPROOF_OPERATOR_KEY</code>.
+      Share it only in private hackathon submission notes, never in GitHub or public docs.
+    </section>
+
+    <h2>Best Time To Test</h2>
+    <ul>
+      <li><strong>Before a match:</strong> best for fixtures, scheduled score snapshots, UI, replay, audit, and guarded proof behavior.</li>
+      <li><strong>During a live match:</strong> best for stream worker, live score updates, match-state signals, and proof/stat validation if <code>Stats</code> becomes non-empty.</li>
+      <li><strong>After a match:</strong> best for replay, historical scores, audit trail, and stored evidence review.</li>
+    </ul>
+    <p>If only one test window is available, test during a live match. If no live match is available, scheduled fixture data is still acceptable; state clearly that MatchProof stores and replays the TxLINE payloads currently available.</p>
+
+    <h2>End-to-End Test Flow</h2>
+
+    <div class="step">
+      <h3>1. Open the site</h3>
+      <pre>https://matchproof.onrender.com</pre>
+      <div class="expected">
+        <strong>Expected:</strong> landing page loads; logo matches favicon; desktop header stays fixed; mobile header scrolls with the page.
+      </div>
+    </div>
+
+    <div class="step">
+      <h3>2. Check application health</h3>
+      <pre>https://matchproof.onrender.com/api/health</pre>
+      <div class="expected">
+        <strong>Expected:</strong> <code>"ok": true</code>, <code>"mode": "live"</code>, <code>"hasGuestJwt": true</code>, and <code>"hasApiToken": true</code>.
+      </div>
+    </div>
+
+    <div class="step">
+      <h3>3. Verify Settings</h3>
+      <p>Open <strong>Settings</strong>.</p>
+      <div class="expected">
+        <strong>Expected:</strong> network is <code>mainnet</code>, service level is <code>12</code>, TxLINE API origin is correct, Mode Control shows live mode, and operator key input is available.
+      </div>
+    </div>
+
+    <div class="step">
+      <h3>4. Sync fixtures</h3>
+      <p>Open <strong>Command Center</strong>, paste the private operator key, then click <strong>Sync fixtures</strong>.</p>
+      <div class="expected">
+        <strong>Expected:</strong> real TxLINE fixtures are stored, fixture count updates, no <code>401</code>, and Audit Log records fixture ingestion.
+      </div>
+    </div>
+
+    <div class="step">
+      <h3>5. Inspect fixtures</h3>
+      <p>Open <strong>Fixtures</strong>, then open one fixture.</p>
+      <div class="expected">
+        <strong>Expected:</strong> numeric fixture IDs such as <code>18187298</code>; World Cup or Friendlies rows; fixture monitor opens with raw metadata.
+      </div>
+    </div>
+
+    <div class="step">
+      <h3>6. Ingest score snapshot</h3>
+      <p>Return to <strong>Command Center</strong>, paste the operator key if needed, choose a real numeric fixture, and click <strong>Score snapshot</strong>.</p>
+      <div class="expected">
+        <strong>Expected before match:</strong> scheduled score rows may be stored, often 0-2 updates, with no crash.
+        <br /><strong>Expected during match:</strong> score rows update and match-state signals may appear.
+        <br /><strong>Expected after match:</strong> stored snapshot or historical data remains inspectable.
+      </div>
+    </div>
+
+    <div class="step">
+      <h3>7. Review Match Monitor evidence</h3>
+      <p>Open the fixture you just ingested.</p>
+      <div class="expected">
+        <strong>Expected:</strong> stored TxLINE score payloads appear under updates, raw JSON evidence is inspectable, and deterministic agent signals appear if rules detected changes.
+      </div>
+    </div>
+
+    <div class="step">
+      <h3>8. Review Signals</h3>
+      <p>Open <strong>Signals</strong>.</p>
+      <div class="expected">
+        <strong>Expected:</strong> signals show severity, title, evidence, source update IDs, and status. If no live match-state changes exist, an empty signal set is acceptable.
+      </div>
+    </div>
+
+    <div class="step">
+      <h3>9. Test Proof Console</h3>
+      <p>Use a fixture ID, sequence from a stored update, and a stat key from raw payload <code>Stats</code> if available.</p>
+      <div class="expected warning">
+        <strong>Expected before match:</strong> if <code>Stats</code> is empty, proof may fail gracefully and record a failed or unsupported attempt.
+        <br /><strong>Expected during/after match:</strong> if TxLINE returns proof material, status should become <code>proof_received</code>.
+      </div>
+    </div>
+
+    <div class="step">
+      <h3>10. Use Replay Lab</h3>
+      <p>Open <strong>Replay Lab</strong> and test Start, Step, Pause, and Reset.</p>
+      <div class="expected">
+        <strong>Expected:</strong> replay walks through stored updates. If no updates exist, ingest a score snapshot first.
+      </div>
+    </div>
+
+    <div class="step">
+      <h3>11. Inspect Audit Log</h3>
+      <p>Open <strong>Audit Log</strong>.</p>
+      <div class="expected">
+        <strong>Expected:</strong> fixture sync, score ingestion, proof attempt, replay, and worker events appear as traceable audit evidence.
+      </div>
+    </div>
+
+    <div class="step">
+      <h3>12. Test Stream Worker during a live match</h3>
+      <p>In Command Center, paste the operator key, click <strong>Start worker</strong>, then later click <strong>Stop worker</strong>.</p>
+      <div class="expected">
+        <strong>Expected during match:</strong> stream updates may be captured and audited.
+        <br /><strong>Expected before match:</strong> worker may connect but receive no messages; this is normal if there are no live score events.
+      </div>
+    </div>
+
+    <div class="step">
+      <h3>13. Verify App Events SSE</h3>
+      <pre>https://matchproof.onrender.com/api/stream/app-events</pre>
+      <div class="expected">
+        <strong>Expected:</strong> text stream begins with <code>event: status</code> and includes <code>"mode":"live"</code>.
+      </div>
+    </div>
+
+    <div class="step">
+      <h3>14. Confirm live-mode guards</h3>
+      <pre>https://matchproof.onrender.com/api/export</pre>
+      <p>Expected: <code>403</code> in live mode.</p>
+      <pre>curl -X POST https://matchproof.onrender.com/api/demo/seed</pre>
+      <p>Expected: <code>409</code> in live mode.</p>
+    </div>
+
+    <h2>Final Demo Path</h2>
+    <ol>
+      <li>Landing page.</li>
+      <li>Health and Settings showing live TxLINE credentials.</li>
+      <li>Command Center fixture sync.</li>
+      <li>Fixtures page showing real World Cup fixtures.</li>
+      <li>Score snapshot for one fixture.</li>
+      <li>Match Monitor raw TxLINE evidence.</li>
+      <li>Signals.</li>
+      <li>Proof Console with honest proof status.</li>
+      <li>Replay Lab.</li>
+      <li>Audit Log as final evidence trail.</li>
+    </ol>
+  </body>
+</html>
