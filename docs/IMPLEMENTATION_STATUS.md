@@ -47,6 +47,7 @@
 - [x] Settings Mode Control trigger for demo seed/live ingestion
 - [x] Prisma directUrl added for migrations
 - [x] Supabase session-pooler runtime guidance added to README and env example
+- [x] Supabase pool connection-limit guard for Render runtime
 
 ## In Progress
 
@@ -61,7 +62,7 @@
 
 - Lint: Passed - `npm run lint`
 - Typecheck: Passed - `npm run typecheck`
-- Build: Passed before Render runtime connection change
+- Build: Passed - `DATABASE_URL="postgresql://user:pass@localhost:5432/matchproof" ENABLE_DEMO_MODE=false npm run build`
 - Tests: Passed - `npm test`
 - Browser: Pending after redeploy
 - Prisma: Passed locally before Render runtime connection change

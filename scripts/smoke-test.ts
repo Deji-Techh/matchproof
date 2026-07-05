@@ -1,6 +1,7 @@
 import assert from "node:assert/strict";
 import { runAgentRuntime } from "@/lib/agents/runtime";
 import { requireOperatorKey } from "@/lib/security/operator-guard";
+import { getPrismaDatabaseUrl } from "@/lib/db/prisma";
 import { captureScoresStream, getReconnectDelayMs, parseSseBuffer } from "@/lib/txline/streams";
 import { getStreamWorkerStatus, startStreamWorker, stopStreamWorker } from "@/lib/txline/stream-worker";
 import { toAgentUpdate } from "@/lib/replay/replay-engine";
@@ -87,6 +88,11 @@ assert.equal(typeof captureScoresStream, "function");
 assert.equal(typeof getStreamWorkerStatus, "function");
 assert.equal(typeof startStreamWorker, "function");
 assert.equal(typeof stopStreamWorker, "function");
+assert.equal(getPrismaDatabaseUrl("file:./dev.db"), "file:./dev.db");
+assert.equal(
+  new URL(getPrismaDatabaseUrl("postgresql://user:pass@example.com:6543/postgres?pgbouncer=true") ?? "").searchParams.get("connection_limit"),
+  "1",
+);
 
 const originalDemoMode = process.env.ENABLE_DEMO_MODE;
 const originalOperatorKey = process.env.MATCHPROOF_OPERATOR_KEY;

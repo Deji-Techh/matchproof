@@ -126,10 +126,23 @@ Command Center, Match Monitor, Replay Lab, Export`}
 
       <section className="grid gap-4 xl:grid-cols-2">
         <TerminalPanel
-          title="Configure Render database"
-          detail="Use Supabase session-pooler URLs for Prisma runtime and migrations. Keep real values in Render only."
-          commands={`DATABASE_URL=<Supabase session pooler URL, port 5432>
-DIRECT_URL=<Supabase session pooler URL, port 5432>
+          title="Activate TxLINE service level 12"
+          detail="Run these locally with the same Solana mainnet wallet used for the subscription transaction."
+          commands={`solana balance
+npm run txline:subscribe
+npm run txline:activate -- <subscription_tx_signature>`}
+          output={`TXLINE_GUEST_JWT=<fresh guest token>
+TXLINE_API_TOKEN=<activated token>`}
+        />
+        <TerminalPanel
+          title="Configure Render live mode"
+          detail="Set these as Render environment variables. Keep secrets out of Git and chat."
+          commands={`DATABASE_URL=postgresql://postgres.<project-ref>:<password>@aws-0-<region>.pooler.supabase.com:5432/postgres?connection_limit=1&pool_timeout=20
+DIRECT_URL=postgresql://postgres.<project-ref>:<password>@aws-0-<region>.pooler.supabase.com:5432/postgres
+TXLINE_NETWORK=mainnet
+TXLINE_SERVICE_LEVEL=12
+TXLINE_API_ORIGIN=https://txline.txodds.com
+TXLINE_API_BASE_URL=https://txline.txodds.com/api
 ENABLE_DEMO_MODE=false
 ENABLE_PUBLIC_EXPORT=false
 MATCHPROOF_OPERATOR_KEY=<secret>`}

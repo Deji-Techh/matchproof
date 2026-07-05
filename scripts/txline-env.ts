@@ -6,7 +6,7 @@ const apiBaseUrl = `${apiOrigin}/api`;
 async function main() {
   const includeGuestJwt = process.argv.includes("--guest-jwt");
   const values: Record<string, string> = {
-    DATABASE_URL: "postgresql://postgres.<project-ref>:<password>@aws-0-<region>.pooler.supabase.com:6543/postgres?pgbouncer=true",
+    DATABASE_URL: "postgresql://postgres.<project-ref>:<password>@aws-0-<region>.pooler.supabase.com:6543/postgres?pgbouncer=true&connection_limit=1&pool_timeout=20",
     ENABLE_DEMO_MODE: "true",
     ENABLE_PUBLIC_EXPORT: "false",
     TXLINE_NETWORK: "mainnet",

@@ -228,6 +228,12 @@ TXLINE_API_TOKEN=<activated TxLINE API token>
 MATCHPROOF_OPERATOR_KEY=<private operator key>
 ```
 
+For Render free instances using Supabase pooler URLs, keep Prisma's runtime pool small:
+
+```txt
+DATABASE_URL=postgresql://postgres.<project-ref>:<password>@aws-0-<region>.pooler.supabase.com:6543/postgres?pgbouncer=true&connection_limit=1&pool_timeout=20
+```
+
 ## TxLINE Endpoints Used
 
 Client methods are implemented for fixture snapshot, score snapshot, score updates, bounded score stream capture, long-running score stream worker, historical scores, and score stat validation flows.
