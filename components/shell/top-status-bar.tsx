@@ -13,6 +13,7 @@ const consoleLinks = [
   ["Proof", "/proof-console"],
   ["Replay", "/replay-lab"],
   ["Audit", "/audit-log"],
+  ["Guide", "/how-to-use"],
 ];
 
 export async function TopStatusBar() {

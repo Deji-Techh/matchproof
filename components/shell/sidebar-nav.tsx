@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import {
   CalendarDays,
   Cable,
+  BookOpenCheck,
   History,
   LayoutDashboard,
   Radio,
@@ -23,6 +24,7 @@ const items = [
   { href: "/proof-console", label: "Proof Console", icon: ShieldCheck },
   { href: "/replay-lab", label: "Replay Lab", icon: History },
   { href: "/audit-log", label: "Audit Log", icon: ScrollText },
+  { href: "/how-to-use", label: "How to Use", icon: BookOpenCheck },
   { href: "/settings", label: "Settings", icon: Settings },
 ];
 

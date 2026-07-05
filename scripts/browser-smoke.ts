@@ -29,6 +29,7 @@ async function main() {
     ["/proof-console", "Proof Console"],
     ["/replay-lab", "Replay Lab"],
     ["/audit-log", "Audit Log"],
+    ["/how-to-use", "How to Use"],
     ["/settings", "Settings"],
   ] as const;
 

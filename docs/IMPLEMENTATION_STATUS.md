@@ -40,6 +40,8 @@
 - [x] Reference video asset integrated into landing page
 - [x] MatchProof logo and favicon integrated
 - [x] Service-level-12 mainnet TxLINE configuration documented
+- [x] How to Use operator guide
+- [x] Render npm lockfile compatibility fix
 
 ## In Progress
 
@@ -61,6 +63,7 @@ None.
 - Typecheck: Passed - `DATABASE_URL="file:./dev.db" ENABLE_DEMO_MODE=true npm run typecheck`
 - Build: Passed - `DATABASE_URL="file:./dev.db" ENABLE_DEMO_MODE=true npm run build`
 - Tests: Passed - `DATABASE_URL="file:./dev.db" ENABLE_DEMO_MODE=true npm test`
+- Install: Passed - `npm ci --include=dev`
 - Browser: Passed - `PLAYWRIGHT_BASE_URL=http://localhost:3000 DATABASE_URL="file:./dev.db" ENABLE_DEMO_MODE=true npm run test:browser`
 - Prisma: Passed - `DATABASE_URL="file:./dev.db" ENABLE_DEMO_MODE=true npx prisma validate`
 - React Doctor: Passed - `npx -y react-doctor@latest . --verbose --scope changed` returned 100/100
@@ -71,6 +74,6 @@ None.
 
 ## Last GitHub Push
 
-Commit: Latest pushed commit on main
+Commit: Pending push
 Branch: main
-Date: 2026-07-04
+Date: 2026-07-05
