@@ -229,7 +229,7 @@ function LandingNav({ mode }: { mode: string }) {
     <nav className="flex min-h-16 items-center justify-between gap-3 border-b border-[var(--border-subtle)] bg-[var(--bg-panel)] px-3 sm:px-5 lg:px-10">
       <Link href="/" className="flex items-center gap-3">
         <span className="grid h-10 w-10 shrink-0 place-items-center overflow-hidden">
-          <Image src="/brand/matchproof-mark.png" alt="MatchProof" width={36} height={36} className="h-9 w-9 object-contain" priority />
+          <Image src="/icon.png" alt="MatchProof" width={36} height={36} className="h-9 w-9 object-contain" priority />
         </span>
         <span>
           <span className="block font-black uppercase leading-none">MatchProof</span>
