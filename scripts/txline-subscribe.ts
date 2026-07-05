@@ -83,9 +83,16 @@ console.log(`Service level: ${SERVICE_LEVEL_ID}`);
 console.log(`Weeks: ${WEEKS}`);
 console.log("Submitting TxLINE subscription transaction...");
 
-const txSig = await sendAndConfirmTransaction(connection, transaction, [wallet], {
-  commitment: "confirmed",
-});
+async function main() {
+  const txSig = await sendAndConfirmTransaction(connection, transaction, [wallet], {
+    commitment: "confirmed",
+  });
 
-console.log("\nSubscription transaction:");
-console.log(txSig);
+  console.log("\nSubscription transaction:");
+  console.log(txSig);
+}
+
+main().catch((error) => {
+  console.error(error);
+  process.exit(1);
+});
