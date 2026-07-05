@@ -14,27 +14,9 @@ services:
         value: production
       - key: DATABASE_URL
         sync: false
+      - key: DIRECT_URL
+        sync: false
       - key: ENABLE_DEMO_MODE
         value: "false"
       - key: ENABLE_PUBLIC_EXPORT
         value: "false"
-      - key: TXLINE_NETWORK
-        value: mainnet
-      - key: TXLINE_SERVICE_LEVEL
-        value: "12"
-      - key: TXLINE_API_ORIGIN
-        value: https://txline.txodds.com
-      - key: TXLINE_API_BASE_URL
-        value: https://txline.txodds.com/api
-      - key: SOLANA_RPC_URL
-        value: https://api.mainnet-beta.solana.com
-      - key: TXLINE_PROGRAM_ID
-        value: 9ExbZjAapQww1vfcisDmrngPinHTEfpjYRWMunJgcKaA
-      - key: TXLINE_TXL_TOKEN_MINT
-        value: Zhw9TVKp68a1QrftncMSd6ELXKDtpVMNuMGr1jNwdeL
-      - key: TXLINE_GUEST_JWT
-        sync: false
-      - key: TXLINE_API_TOKEN
-        sync: false
-      - key: MATCHPROOF_OPERATOR_KEY
-        sync: false
