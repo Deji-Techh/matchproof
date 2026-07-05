@@ -6,8 +6,8 @@ export const metadata: Metadata = {
   title: "MatchProof",
   description: "Autonomous verification for live World Cup data.",
   icons: {
-    icon: "/brand/matchproof-mark.png",
-    apple: "/brand/matchproof-mark.png",
+    icon: "/icon.png",
+    apple: "/apple-icon.png",
   },
 };
 

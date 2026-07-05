@@ -23,7 +23,7 @@ export async function TopStatusBar() {
   const hasCredentials = txline.hasGuestJwt && txline.hasApiToken;
 
   return (
-    <header className="fixed inset-x-0 top-0 z-40 border-b border-[var(--border-subtle)] bg-[var(--bg-panel)]">
+    <header className="border-b border-[var(--border-subtle)] bg-[var(--bg-panel)] md:fixed md:inset-x-0 md:top-0 md:z-40">
       <MatchTicker fixtures={fixtures} />
       <div className="flex min-h-16 items-center justify-between gap-3 px-3 sm:px-4">
         <Link href="/" className="flex min-w-0 items-center gap-3">
