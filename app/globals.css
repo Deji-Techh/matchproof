@@ -12,9 +12,9 @@
   --text-primary: #f5f5f5;
   --text-secondary: #a3a3a3;
   --text-muted: #737373;
-  --accent-red: #f3202d;
+  --accent-primary: #22c55e;
   --accent-ice: #bfc7ff;
-  --accent-cyan: #2dd4bf;
+  --accent-data: #2dd4bf;
   --success: #22c55e;
   --warning: #eab308;
   --danger: #ef4444;
@@ -93,7 +93,7 @@ select {
   left: 0;
   height: 3px;
   content: "";
-  background: var(--accent-red);
+  background: var(--accent-primary);
   clip-path: polygon(0 0, 98% 0, 100% 100%, 0 100%);
 }
 

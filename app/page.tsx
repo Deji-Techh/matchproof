@@ -84,7 +84,7 @@ export default async function Home() {
   return (
     <main className="min-h-screen bg-[var(--bg-main)] text-[var(--text-primary)]">
       <LandingNav mode={summary.mode} />
-      <MatchTicker />
+      <MatchTicker fixtures={commandData.fixtures} />
 
       <section className="relative isolate min-h-[calc(100vh-105px)] overflow-hidden border-b border-[var(--border-subtle)]">
         <video
@@ -115,7 +115,7 @@ export default async function Home() {
             <div className="mt-8 flex flex-wrap gap-3">
               <Link
                 href="/command-center"
-                className="interactive-panel inline-flex min-h-11 items-center gap-2 border border-[var(--accent-red)] bg-[var(--accent-red)] px-4 py-3 text-sm font-black uppercase text-black sm:px-5"
+                className="interactive-panel inline-flex min-h-11 items-center gap-2 border border-[var(--accent-primary)] bg-[var(--accent-primary)] px-4 py-3 text-sm font-black uppercase text-black sm:px-5"
               >
                 Open console
                 <ArrowRight className="h-4 w-4" />
@@ -173,7 +173,7 @@ export default async function Home() {
       <section id="system" className="section-band track-line py-16">
         <div className="mx-auto max-w-[1600px] px-4 sm:px-5 lg:px-10">
           <div className="reveal-up max-w-3xl" style={delay(REVEAL.cards)}>
-            <p className="text-xs font-black uppercase text-[var(--accent-red)]">How it works</p>
+            <p className="text-xs font-black uppercase text-[var(--accent-primary)]">How it works</p>
             <h2 className="page-title safe-word mt-3 font-black uppercase leading-none tracking-normal">Sport action becomes auditable data.</h2>
           </div>
           <div className="mt-9 grid gap-4 md:grid-cols-2 xl:grid-cols-4">
@@ -181,7 +181,7 @@ export default async function Home() {
               const Icon = step.icon;
               return (
                 <article key={step.title} className="reveal-up panel interactive-panel p-5" style={delay(REVEAL.cards, index * 80)}>
-                  <Icon className="h-6 w-6 text-[var(--accent-cyan)]" />
+                  <Icon className="h-6 w-6 text-[var(--accent-data)]" />
                   <h3 className="mt-5 text-xl font-black uppercase">{step.title}</h3>
                   <p className="mt-3 text-sm leading-6 text-[var(--text-secondary)]">{step.body}</p>
                 </article>
@@ -194,7 +194,7 @@ export default async function Home() {
       <section className="bg-[var(--bg-main)] py-16">
         <div className="mx-auto grid max-w-[1600px] gap-8 px-4 sm:px-5 lg:grid-cols-[0.7fr_1.3fr] lg:px-10">
           <div className="reveal-up" style={delay(REVEAL.panels)}>
-            <p className="text-xs font-black uppercase text-[var(--accent-red)]">Operator surfaces</p>
+            <p className="text-xs font-black uppercase text-[var(--accent-primary)]">Operator surfaces</p>
             <h2 className="page-title safe-word mt-3 font-black uppercase leading-none tracking-normal">Built for inspection under pressure.</h2>
             <p className="mt-5 text-sm leading-6 text-[var(--text-secondary)]">
               The console prioritizes source evidence, deterministic status, replayability, and audit trails. It never provides outcome recommendations or transactional sports guidance.
@@ -245,7 +245,7 @@ function LandingNav({ mode }: { mode: string }) {
           Proof console
         </Link>
       </div>
-      <Link className="interactive-panel border border-[var(--accent-red)] bg-[var(--accent-red)] px-3 py-2 text-xs font-black uppercase text-black md:hidden" href="/command-center">
+      <Link className="interactive-panel border border-[var(--accent-primary)] bg-[var(--accent-primary)] px-3 py-2 text-xs font-black uppercase text-black md:hidden" href="/command-center">
         Console
       </Link>
     </nav>
@@ -301,7 +301,7 @@ function HeroConsole({
       <div className="mt-5 border border-[var(--border-subtle)] bg-[var(--bg-panel)] p-4">
         <div className="flex flex-wrap items-center justify-between gap-3 border-b border-[var(--border-subtle)] pb-3">
           <p className="mono text-[11px] uppercase text-[var(--text-muted)]">{fixtureName}</p>
-          <span className="mono text-[11px] uppercase text-[var(--accent-cyan)]">seq {sequence}</span>
+          <span className="mono text-[11px] uppercase text-[var(--accent-data)]">seq {sequence}</span>
         </div>
         <div className="grid grid-cols-[1fr_auto_1fr] items-end gap-3 py-5">
           <div>
@@ -312,7 +312,7 @@ function HeroConsole({
             <p className="text-5xl font-black leading-none sm:text-6xl">
               {homeScore}-{awayScore}
             </p>
-            <p className="mt-2 text-xs font-black uppercase text-[var(--accent-red)]">{period}</p>
+            <p className="mt-2 text-xs font-black uppercase text-[var(--accent-primary)]">{period}</p>
           </div>
           <div className="text-right">
             <p className="text-xs font-black uppercase text-[var(--text-muted)]">Away</p>

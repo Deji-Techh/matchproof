@@ -9,6 +9,7 @@ export function getTxlineConfig(): TxlineConfig {
 
   return {
     network,
+    serviceLevel: Number(process.env.TXLINE_SERVICE_LEVEL ?? (network === "mainnet" ? 12 : 1)),
     apiOrigin,
     apiBaseUrl: process.env.TXLINE_API_BASE_URL ?? `${apiOrigin}/api`,
     hasGuestJwt: Boolean(process.env.TXLINE_GUEST_JWT),

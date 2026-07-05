@@ -3,6 +3,8 @@ import { StatusBadge } from "@/components/ui/status-badge";
 import { PageHeader } from "@/components/ui/page-header";
 import { getSafeTxlineStatus } from "@/lib/txline/auth";
 
+export const dynamic = "force-dynamic";
+
 export default function SettingsPage() {
   const txline = getSafeTxlineStatus();
 
@@ -22,6 +24,7 @@ export default function SettingsPage() {
         </Panel>
         <Panel icon={Radio} title="Network">
           <Row label="Network" value={txline.network} />
+          <Row label="Service level" value={String(txline.serviceLevel)} />
           <Row label="Solana RPC" value={txline.solanaRpcUrl} />
           <Row label="Program ID" value={txline.programId ?? "not configured"} />
         </Panel>

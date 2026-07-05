@@ -27,12 +27,19 @@
 - [x] Proof request form
 - [x] Command Center evidence-flow panel
 - [x] Command Center ingestion controls
+- [x] Bounded TxLINE score stream capture
+- [x] Long-lived app event SSE bridge
+- [x] Protected long-running TxLINE score stream worker path
+- [x] Fixture-scoped agent signal logic
+- [x] Live-mode mutation operator guard
+- [x] Live-mode export guard
 - [x] Render deployment
 - [x] Public landing page
 - [x] Match-state ticker for previous, current, and upcoming fixtures
 - [x] Responsive mobile layout pass
 - [x] Reference video asset integrated into landing page
 - [x] MatchProof logo and favicon integrated
+- [x] Service-level-12 mainnet TxLINE configuration documented
 
 ## In Progress
 
@@ -40,9 +47,9 @@ None.
 
 ## Planned
 
-- [ ] Real TxLINE credential configuration
-- [ ] Long-running production score stream worker
-- [ ] Real score/stat proof verification with live credentials
+- [ ] Activated TxLINE service-level-12 credential configuration
+- [ ] Hosted stream worker run with activated TxLINE credentials
+- [ ] Independent local/on-chain Solana proof verification
 
 ## Blocked
 
@@ -50,19 +57,17 @@ None.
 
 ## Last Validation
 
-- Lint: Passed - `DATABASE_URL="file:./dev.db" npm run lint`
-- Typecheck: Passed - `DATABASE_URL="file:./dev.db" npm run typecheck`
-- Build: Passed - `DATABASE_URL="file:./dev.db" npm run build`
-- Tests: Passed - `DATABASE_URL="file:./dev.db" npm test`
-- Browser: Passed - `DATABASE_URL="file:./dev.db" npm run test:browser`
-- Mobile Screenshots: Passed - Playwright screenshots at `390x844` for landing, Command Center, and Match Monitor
-- Prisma: Passed - `DATABASE_URL="file:./dev.db" npx prisma validate && DATABASE_URL="file:./dev.db" npx prisma migrate status`
+- Lint: Passed - `DATABASE_URL="file:./dev.db" ENABLE_DEMO_MODE=true npm run lint`
+- Typecheck: Passed - `DATABASE_URL="file:./dev.db" ENABLE_DEMO_MODE=true npm run typecheck`
+- Build: Passed - `DATABASE_URL="file:./dev.db" ENABLE_DEMO_MODE=true npm run build`
+- Tests: Passed - `DATABASE_URL="file:./dev.db" ENABLE_DEMO_MODE=true npm test`
+- Browser: Passed - `PLAYWRIGHT_BASE_URL=http://localhost:3000 DATABASE_URL="file:./dev.db" ENABLE_DEMO_MODE=true npm run test:browser`
+- Prisma: Passed - `DATABASE_URL="file:./dev.db" ENABLE_DEMO_MODE=true npx prisma validate`
+- React Doctor: Passed - `npx -y react-doctor@latest . --verbose --scope changed` returned 100/100
 - Audit: Passed - `npm audit --audit-level=moderate`
-- React Doctor: Passed - 100/100, no issues found
-- Render Blueprint: Passed - `render blueprints validate render.yaml --workspace tea-d5ng1rkmrvns73fnhsh0 --output json`
-- Render Deploy: Passed - service `srv-d94jg4q8qa3s73cret80`, deploy `dep-d94ji45ckfvc73a4oqd0`, status `live`
-- Deployed Health: Passed - `curl -sSf https://matchproof.onrender.com/api/health`
-- Deployed Browser: Passed - `PLAYWRIGHT_BASE_URL=https://matchproof.onrender.com npm run test:browser`
+- Render Deploy: Pending after commit/push
+- Deployed Health: Pending after deploy
+- Deployed Browser: Pending after deploy
 
 ## Last GitHub Push
 

@@ -66,6 +66,16 @@ async function main() {
     state: "visible",
     timeout: 10_000,
   });
+  await page.getByRole("button", { name: "Stream capture" }).click();
+  await page.getByTestId("ingestion-status").getByText("TxLINE credentials are not configured", { exact: false }).waitFor({
+    state: "visible",
+    timeout: 10_000,
+  });
+  await page.getByRole("button", { name: "Start worker" }).click();
+  await page.getByTestId("ingestion-status").getByText("TxLINE credentials are not configured", { exact: false }).waitFor({
+    state: "visible",
+    timeout: 10_000,
+  });
   await page.getByText("Evidence Flow", { exact: false }).waitFor({ state: "visible", timeout: 10_000 });
   await page.screenshot({ path: "/tmp/matchproof-command-center.png", fullPage: true });
 

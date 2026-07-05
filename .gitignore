@@ -35,6 +35,11 @@ Thumbs.db
 .idea/
 .vscode/
 
+# Local reference/source assets
+docs.yaml
+llms.txt
+ChatGPT Image*.png
+
 # Test and coverage output
 coverage/
 playwright-report/

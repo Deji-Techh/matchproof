@@ -3,23 +3,60 @@ import { appEventBus } from "@/lib/events/event-bus";
 
 export async function GET() {
   await ensureDemoData();
-  appEventBus.emit({ type: "app_events_opened", at: new Date().toISOString() });
   const encoder = new TextEncoder();
+  let unsubscribe: (() => void) | undefined;
+  let heartbeat: ReturnType<typeof setInterval> | undefined;
+
+  function encode(event: string, data: unknown) {
+    return encoder.encode(`event: ${event}\ndata: ${JSON.stringify(data)}\n\n`);
+  }
+
   const stream = new ReadableStream({
     start(controller) {
+      const openedAt = new Date().toISOString();
       controller.enqueue(
-        encoder.encode(
-          `event: status\ndata: ${JSON.stringify({
-            app: "MatchProof",
-            mode: "demo",
-            streamStatus: "seeded fallback",
-            at: new Date().toISOString(),
-          })}\n\n`,
-        ),
+        encode("status", {
+          app: "MatchProof",
+          mode: process.env.ENABLE_DEMO_MODE === "false" ? "live" : "demo",
+          streamStatus: "connected",
+          at: openedAt,
+        }),
       );
-      controller.close();
+
+      for (const event of appEventBus.recent()) {
+        controller.enqueue(encode(event.type, event));
+      }
+
+      unsubscribe = appEventBus.subscribe((event) => {
+        try {
+          controller.enqueue(encode(event.type, event));
+        } catch {
+          unsubscribe?.();
+          if (heartbeat) clearInterval(heartbeat);
+        }
+      });
+
+      heartbeat = setInterval(() => {
+        try {
+          controller.enqueue(
+            encode("heartbeat", {
+              app: "MatchProof",
+              at: new Date().toISOString(),
+            }),
+          );
+        } catch {
+          unsubscribe?.();
+          if (heartbeat) clearInterval(heartbeat);
+        }
+      }, 15_000);
+    },
+    cancel() {
+      unsubscribe?.();
+      if (heartbeat) clearInterval(heartbeat);
     },
   });
+
+  appEventBus.emit({ type: "app_events_opened", at: new Date().toISOString() });
 
   return new Response(stream, {
     headers: {

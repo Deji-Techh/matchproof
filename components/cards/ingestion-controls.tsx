@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { CalendarSync, DatabaseZap, History, RefreshCcw } from "lucide-react";
+import { CalendarSync, DatabaseZap, History, Radio, RefreshCcw, Square } from "lucide-react";
 import { StatusBadge } from "@/components/ui/status-badge";
 
 type ActionState = {
@@ -17,12 +17,28 @@ export function IngestionControls({ fixtureId }: { fixtureId?: string }) {
     message: "Ingestion controls ready",
   });
 
-  async function run(action: "fixtures" | "snapshot" | "updates" | "historical") {
+  async function run(action: "fixtures" | "snapshot" | "updates" | "historical" | "stream" | "worker-start" | "worker-stop") {
     setState({ status: "pending", message: "Request in progress" });
 
     const request =
       action === "fixtures"
         ? fetch("/api/ingest/fixtures", { method: "POST" })
+        : action === "worker-start" || action === "worker-stop"
+          ? fetch("/api/ingest/stream-worker", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify(
+                action === "worker-start"
+                  ? { action: "start", fixtureId, captureWindowMs: 30_000, maxMessages: 25 }
+                  : { action: "stop" },
+              ),
+            })
+        : action === "stream"
+          ? fetch("/api/ingest/stream", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ fixtureId, maxMessages: 8, maxDurationMs: 10_000 }),
+            })
         : fetch("/api/ingest/scores", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
@@ -34,13 +50,31 @@ export function IngestionControls({ fixtureId }: { fixtureId?: string }) {
       ok?: boolean;
       fixtures?: unknown[];
       updates?: unknown[];
+      signals?: unknown[];
       error?: string;
       endpoint?: string;
+      heartbeatCount?: number;
+      messageCount?: number;
+      started?: boolean;
+      status?: {
+        running?: boolean;
+        updateCount?: number;
+        signalCount?: number;
+        captureCount?: number;
+      };
     };
 
     const count = payload.fixtures?.length ?? payload.updates?.length ?? 0;
     const message = payload.ok
-      ? `Stored ${count} row(s) from ${payload.endpoint ?? "TxLINE"}`
+      ? action === "worker-start"
+        ? payload.started
+          ? "Stream worker started"
+          : "Stream worker already running"
+        : action === "worker-stop"
+          ? "Stream worker stop requested"
+          : action === "stream"
+        ? `Captured ${count} stream row(s), ${payload.signals?.length ?? 0} signal(s), ${payload.heartbeatCount ?? 0} heartbeat(s)`
+        : `Stored ${count} row(s) from ${payload.endpoint ?? "TxLINE"}`
       : (payload.error ?? "Request recorded for operator review");
 
     setState({ status: payload.ok ? "ok" : "review", message });
@@ -67,6 +101,9 @@ export function IngestionControls({ fixtureId }: { fixtureId?: string }) {
         <ControlButton disabled={disabled || !fixtureId} icon={RefreshCcw} label="Score snapshot" onClick={() => run("snapshot")} />
         <ControlButton disabled={disabled || !fixtureId} icon={DatabaseZap} label="Recent updates" onClick={() => run("updates")} />
         <ControlButton disabled={disabled || !fixtureId} icon={History} label="Historical" onClick={() => run("historical")} />
+        <ControlButton disabled={disabled || !fixtureId} icon={Radio} label="Stream capture" onClick={() => run("stream")} />
+        <ControlButton disabled={disabled || !fixtureId} icon={Radio} label="Start worker" onClick={() => run("worker-start")} />
+        <ControlButton disabled={disabled} icon={Square} label="Stop worker" onClick={() => run("worker-stop")} />
       </div>
       <p data-testid="ingestion-status" className="mt-3 text-xs text-[var(--text-secondary)]">
         {state.message}

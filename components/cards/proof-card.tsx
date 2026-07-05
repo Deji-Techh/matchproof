@@ -10,6 +10,7 @@ export function ProofCard({
   verification: VerificationResult & { fixture?: Fixture | null; sourceUpdate?: FeedUpdate | null };
 }) {
   const verified = verification.status === "verified";
+  const proofReceived = verification.status === "proof_received";
   return (
     <article className="panel interactive-panel p-4">
       <div className="flex items-start justify-between gap-3">
@@ -22,7 +23,9 @@ export function ProofCard({
             Sequence {verification.sequence ?? "unknown"} / stat key {verification.statKey ?? "unknown"}
           </p>
         </div>
-        <StatusBadge variant={verified ? "success" : "warning"}>{verified ? "verified on solana" : verification.status}</StatusBadge>
+        <StatusBadge variant={verified ? "success" : proofReceived ? "proof" : "warning"}>
+          {verified ? "verified" : proofReceived ? "TxLINE proof received" : verification.status}
+        </StatusBadge>
       </div>
       <dl className="mt-4 grid gap-3 border-y border-[var(--border-subtle)] py-4 text-sm sm:grid-cols-3">
         <div>

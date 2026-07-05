@@ -8,7 +8,7 @@ MatchProof is a TxLINE-powered sports-data integrity, monitoring, replay, verifi
 
 Status: Implemented
 
-MatchProof monitors fixture and score data, stores raw payloads for evidence, runs deterministic monitoring agents, supports replay, and verifies selected score/stat updates through TxLINE proof flows where credentials and proof data are available.
+MatchProof monitors fixture and score data, stores raw payloads for evidence, runs deterministic monitoring agents, supports replay, and records selected score/stat proof responses where TxLINE credentials and proof data are available.
 
 ## Problem
 
@@ -18,7 +18,7 @@ Live sports data consumers need to know whether feeds are connected, timely, con
 
 Status: Implemented
 
-MatchProof provides an operator console for TxLINE fixture and score feeds. It focuses on data integrity, auditability, deterministic signals, raw payload inspection, replay, and Solana-backed verification.
+MatchProof provides an operator console for TxLINE fixture and score feeds. It focuses on data integrity, auditability, deterministic signals, raw payload inspection, replay, and proof-response inspection.
 
 ## Key Features
 
@@ -28,6 +28,8 @@ MatchProof provides an operator console for TxLINE fixture and score feeds. It f
 - Status: Implemented - MatchProof logo and favicon
 - Status: Implemented - match-state ticker showing previous results, current monitored matches, and upcoming fixtures from stored fixture data
 - Status: Implemented - operator-triggered fixture and score ingestion routes with audit events
+- Status: Implemented - bounded TxLINE score stream capture route with app event SSE bridge
+- Status: Implemented - protected long-running TxLINE score stream worker path
 - Status: Implemented - Prisma schema and SQLite demo seed
 - Status: Implemented - deterministic Feed Health Agent
 - Status: Implemented - deterministic Match State Agent
@@ -39,9 +41,11 @@ MatchProof provides an operator console for TxLINE fixture and score feeds. It f
 - Status: Implemented - Audit Log
 - Status: Implemented - JSON evidence export
 - Status: Implemented - mutation route rate limiting
+- Status: Implemented - live-mode operator key guard for mutation routes
 - Status: Implemented - Settings screen
 - Status: Implemented - clearly labeled demo mode
-- Status: Planned - long-running production TxLINE stream worker
+- Status: Pending - activated TxLINE service-level-12 credentials in hosted environment
+- Status: Pending - independent local/on-chain Solana proof verification
 
 ## Why TxLINE
 
@@ -61,14 +65,23 @@ Agents are deterministic. The MVP includes Feed Health, Match State, and Proof a
 
 ## TxLINE Integration
 
-Status: Implemented
+Status: Implemented for route/client/worker surfaces; pending for credential-backed live data in the hosted environment.
 
-Runtime client methods and the proof route are implemented. Demo mode remains active until TxLINE credentials are configured.
+Runtime client methods, ingestion routes, bounded stream capture, and the protected stream worker path are implemented. Demo mode remains active until TxLINE credentials are configured.
+
+The default documented target is the World Cup free real-time tier:
+
+- `TXLINE_NETWORK=mainnet`
+- `TXLINE_SERVICE_LEVEL=12`
+- `TXLINE_API_ORIGIN=https://txline.txodds.com`
 
 Operator ingestion routes:
 
 - `POST /api/ingest/fixtures`
 - `POST /api/ingest/scores`
+- `POST /api/ingest/stream`
+- `GET /api/ingest/stream-worker`
+- `POST /api/ingest/stream-worker`
 
 Evidence export:
 
@@ -86,9 +99,9 @@ Expected TxLINE endpoints:
 
 ## Solana Verification
 
-Status: Implemented
+Status: Implemented for TxLINE proof-response retrieval and storage; pending for independent local/on-chain verification.
 
-The Proof Console can store proof records and the `/api/verify/score-stat` route calls TxLINE stat validation when credentials are configured. The app only shows `VERIFIED ON SOLANA` after a real successful verification.
+The Proof Console can store proof records and the `/api/verify/score-stat` route calls TxLINE stat validation when credentials are configured. When the TxLINE endpoint returns proof material, MatchProof records that as `proof_received`. It does not claim independent Solana verification until a local/on-chain validation layer is implemented and succeeds.
 
 ## Replay Mode
 
@@ -129,8 +142,8 @@ Status: Implemented
 
 ```bash
 npm install
-DATABASE_URL="file:./dev.db" npx prisma migrate dev
-DATABASE_URL="file:./dev.db" npm run dev
+DATABASE_URL="file:./dev.db" ENABLE_DEMO_MODE=true npx prisma migrate dev
+DATABASE_URL="file:./dev.db" ENABLE_DEMO_MODE=true npm run dev
 ```
 
 ## Environment Variables
@@ -142,7 +155,7 @@ See `.env.example`.
 Status: Implemented
 
 ```bash
-DATABASE_URL="file:./dev.db" npm run dev
+DATABASE_URL="file:./dev.db" ENABLE_DEMO_MODE=true npm run dev
 ```
 
 Open `http://localhost:3000`.
@@ -166,11 +179,11 @@ The seeded demo includes previous, current, and upcoming fixture rows so the mat
 Status: Implemented
 
 ```bash
-DATABASE_URL="file:./dev.db" npm run lint
-DATABASE_URL="file:./dev.db" npm run typecheck
-DATABASE_URL="file:./dev.db" npm test
-DATABASE_URL="file:./dev.db" npm run test:browser
-DATABASE_URL="file:./dev.db" npm run build
+DATABASE_URL="file:./dev.db" ENABLE_DEMO_MODE=true npm run lint
+DATABASE_URL="file:./dev.db" ENABLE_DEMO_MODE=true npm run typecheck
+DATABASE_URL="file:./dev.db" ENABLE_DEMO_MODE=true npm test
+DATABASE_URL="file:./dev.db" ENABLE_DEMO_MODE=true npm run test:browser
+DATABASE_URL="file:./dev.db" ENABLE_DEMO_MODE=true npm run build
 ```
 
 Mobile visual checks are performed with Playwright screenshots at `390x844` for the landing page, Command Center, and Match Monitor.
@@ -187,11 +200,13 @@ The Render deployment is live at `https://matchproof.onrender.com`.
 
 Status: Implemented
 
-Client methods are implemented for the fixture snapshot, score snapshot, score updates, score stream parsing, historical scores, and score stat validation flows.
+Client methods are implemented for the fixture snapshot, score snapshot, score updates, bounded score stream capture, long-running score stream worker, historical scores, and score stat validation flows.
 
-The Command Center exposes operator controls for fixture sync, score snapshots, recent score updates, and historical score ingestion. If credentials are missing, failed live calls are recorded as audit events and demo data remains active.
+The Command Center exposes operator controls for fixture sync, score snapshots, recent score updates, historical score ingestion, short score stream capture, and starting/stopping the score stream worker. If credentials are missing, failed live calls are recorded as audit events and demo data remains active.
 
 State-changing API routes include lightweight per-client rate limits to reduce accidental or anonymous abuse in public demo deployments.
+
+In live mode (`ENABLE_DEMO_MODE=false`), mutation routes require `MATCHPROOF_OPERATOR_KEY` through either the `x-matchproof-operator-key` header or a Bearer token. Evidence export is public only in demo mode unless `ENABLE_PUBLIC_EXPORT=true`.
 
 ## Product Boundary
 
@@ -201,9 +216,9 @@ It does not recommend bets, place wagers, provide picks, calculate gambling prof
 
 ## Known Limitations
 
-- Status: In Progress - TxLINE credentials are not configured in this local or hosted demo environment.
-- Status: Planned - long-running production stream worker for hosted continuous ingestion.
-- Status: Planned - real score/stat proof verification depends on TxLINE credentials and available proof data.
+- Status: In Progress - TxLINE service level 12 is configured as the mainnet target, but activated credentials are not configured in this local or hosted demo environment.
+- Status: In Progress - the stream worker path exists, but hosted live operation requires activated TxLINE credentials.
+- Status: Planned - independent local/on-chain Solana verification beyond TxLINE proof-response retrieval.
 - Status: Planned - final public repository switch requires project-owner approval.
 
 ## Hackathon Submission

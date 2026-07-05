@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useMemo } from "react";
 import type { AgentSignal, FeedUpdate, Fixture, VerificationResult } from "@prisma/client";
 
 type FixtureRow = Fixture & {
@@ -9,43 +9,22 @@ type FixtureRow = Fixture & {
   verifications: VerificationResult[];
 };
 
-type FixturesResponse = {
-  fixtures?: FixtureRow[];
-};
-
 type TickerItem = {
   section: "previous" | "current" | "upcoming";
   text: string;
 };
 
-export function MatchTicker() {
-  const [fixtures, setFixtures] = useState<FixtureRow[]>([]);
-  const [loaded, setLoaded] = useState(false);
+const kickoffFormatter = new Intl.DateTimeFormat("en", {
+  hour: "2-digit",
+  minute: "2-digit",
+  hour12: false,
+  month: "short",
+  day: "2-digit",
+});
 
-  useEffect(() => {
-    let active = true;
-
-    fetch("/api/fixtures")
-      .then((response) => response.json() as Promise<FixturesResponse>)
-      .then((payload) => {
-        if (!active) return;
-        setFixtures(payload.fixtures ?? []);
-      })
-      .catch(() => {
-        if (!active) return;
-        setFixtures([]);
-      })
-      .finally(() => {
-        if (active) setLoaded(true);
-      });
-
-    return () => {
-      active = false;
-    };
-  }, []);
-
+export function MatchTicker({ fixtures }: { fixtures: FixtureRow[] }) {
   const items = useMemo(() => buildTickerItems(fixtures), [fixtures]);
-  const visibleItems = loaded && items.length > 0 ? items : [{ section: "current" as const, text: "Loading stored match state" }];
+  const visibleItems = items.length > 0 ? items : [{ section: "current" as const, text: "No stored match state" }];
   const tickerItems = [...visibleItems, ...visibleItems, ...visibleItems];
 
   return (
@@ -144,13 +123,7 @@ function parseRaw(update?: FeedUpdate): { status?: string; period?: string; scor
 
 function kickoffText(value: Date | string | null) {
   if (!value) return "time pending";
-  return new Intl.DateTimeFormat("en", {
-    hour: "2-digit",
-    minute: "2-digit",
-    hour12: false,
-    month: "short",
-    day: "2-digit",
-  }).format(new Date(value));
+  return kickoffFormatter.format(new Date(value));
 }
 
 function timeValue(value: Date | string | null) {
@@ -170,7 +143,7 @@ function dotClass(section: TickerItem["section"]) {
     section === "previous"
       ? "bg-[var(--text-muted)]"
       : section === "current"
-        ? "bg-[var(--accent-red)]"
-        : "bg-[var(--accent-cyan)]";
+        ? "bg-[var(--accent-primary)]"
+        : "bg-[var(--accent-data)]";
   return `h-1.5 w-1.5 rounded-sm ${color}`;
 }

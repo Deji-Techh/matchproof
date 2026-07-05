@@ -3,6 +3,7 @@ import { z } from "zod";
 import { ensureDemoData } from "@/lib/db/demo-seed";
 import { ingestScoreData } from "@/lib/txline/ingest";
 import { checkRateLimit } from "@/lib/security/rate-limit";
+import { requireOperatorKey } from "@/lib/security/operator-guard";
 
 const BodySchema = z.object({
   fixtureId: z.string().min(1).max(120),
@@ -11,6 +12,9 @@ const BodySchema = z.object({
 
 export async function POST(request: Request) {
   try {
+    const unauthorized = requireOperatorKey(request);
+    if (unauthorized) return unauthorized;
+
     const limited = checkRateLimit(request, "ingest-scores", { limit: 20, windowMs: 60_000 });
     if (limited) return limited;
 

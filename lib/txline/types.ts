@@ -2,6 +2,7 @@ export type TxlineNetwork = "devnet" | "mainnet";
 
 export type TxlineConfig = {
   network: TxlineNetwork;
+  serviceLevel: number;
   apiOrigin: string;
   apiBaseUrl: string;
   hasGuestJwt: boolean;

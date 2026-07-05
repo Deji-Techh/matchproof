@@ -3,6 +3,8 @@ import Image from "next/image";
 import Link from "next/link";
 import { StatusBadge } from "@/components/ui/status-badge";
 import { MatchTicker } from "@/components/shell/match-ticker";
+import { getFixtures } from "@/lib/db/queries";
+import { getSafeTxlineStatus } from "@/lib/txline/auth";
 
 const consoleLinks = [
   ["Command", "/command-center"],
@@ -13,10 +15,15 @@ const consoleLinks = [
   ["Audit", "/audit-log"],
 ];
 
-export function TopStatusBar() {
+export async function TopStatusBar() {
+  const txline = getSafeTxlineStatus();
+  const fixtures = process.env.NEXT_PHASE === "phase-production-build" ? [] : await getFixtures().catch(() => []);
+  const modeLabel = process.env.ENABLE_DEMO_MODE === "false" ? "Live" : "Demo mode";
+  const hasCredentials = txline.hasGuestJwt && txline.hasApiToken;
+
   return (
     <header className="sticky top-0 z-30 border-b border-[var(--border-subtle)] bg-[var(--bg-panel)]">
-      <MatchTicker />
+      <MatchTicker fixtures={fixtures} />
       <div className="flex min-h-16 items-center justify-between gap-3 px-3 sm:px-4">
         <Link href="/" className="flex min-w-0 items-center gap-3">
           <span className="grid h-10 w-10 shrink-0 place-items-center overflow-hidden">
@@ -28,12 +35,13 @@ export function TopStatusBar() {
           </span>
         </Link>
         <div className="hidden min-w-0 items-center gap-2 lg:flex">
-          <StatusBadge variant="info">Devnet</StatusBadge>
-          <StatusBadge variant="warning">Demo mode</StatusBadge>
+          <StatusBadge variant="info">{txline.network}</StatusBadge>
+          <StatusBadge variant="proof">SL {txline.serviceLevel}</StatusBadge>
+          <StatusBadge variant={modeLabel === "Live" ? "success" : "warning"}>{modeLabel}</StatusBadge>
           <span className="mx-2 h-5 w-px bg-[var(--border-subtle)]" />
           <span className="flex items-center gap-2 text-xs text-[var(--text-secondary)]">
             <Radio className="h-4 w-4 text-[var(--warning)]" />
-            Seeded fallback stream
+            {hasCredentials ? "TxLINE stream ready" : "Seeded fallback stream"}
           </span>
           <span className="flex items-center gap-2 text-xs text-[var(--text-secondary)]">
             <Activity className="h-4 w-4 text-[var(--success)]" />
@@ -45,7 +53,7 @@ export function TopStatusBar() {
           </span>
         </div>
         <div className="flex shrink-0 items-center gap-2">
-          <Link className="interactive-panel border border-[var(--accent-red)] bg-[var(--accent-red)] px-3 py-2 text-xs font-black uppercase text-black md:hidden" href="/command-center">
+          <Link className="interactive-panel border border-[var(--accent-primary)] bg-[var(--accent-primary)] px-3 py-2 text-xs font-black uppercase text-black md:hidden" href="/command-center">
             Console
           </Link>
           <Link

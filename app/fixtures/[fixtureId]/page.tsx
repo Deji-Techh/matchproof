@@ -60,7 +60,7 @@ export default async function FixtureMonitorPage({ params }: { params: Promise<{
         </SectionShell>
         <aside className="space-y-3">
           <div className="flex items-center gap-3">
-            <span className="h-2 w-2 bg-[var(--accent-red)]" />
+            <span className="h-2 w-2 bg-[var(--accent-primary)]" />
             <h2 className="text-sm font-black uppercase text-[var(--text-secondary)]">Raw Fixture Payload</h2>
           </div>
           <RawJsonViewer value={fixture.rawJson} />

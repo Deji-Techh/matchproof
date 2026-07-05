@@ -26,12 +26,12 @@ export default async function ProofConsolePage() {
           <p className="mt-2 text-3xl font-black">{verifications.filter((item) => item.status === "pending").length}</p>
         </div>
         <div className="panel interactive-panel p-4">
-          <p className="text-xs font-black uppercase text-[var(--text-muted)]">Verified updates</p>
-          <p className="mt-2 text-3xl font-black">{verifications.filter((item) => item.status === "verified").length}</p>
+          <p className="text-xs font-black uppercase text-[var(--text-muted)]">Proof responses</p>
+          <p className="mt-2 text-3xl font-black">{verifications.filter((item) => item.status === "proof_received" || item.status === "verified").length}</p>
         </div>
         <div className="panel interactive-panel p-4">
           <p className="text-xs font-black uppercase text-[var(--text-muted)]">Review required</p>
-          <p className="mt-2 text-3xl font-black">{verifications.filter((item) => item.status !== "verified").length}</p>
+          <p className="mt-2 text-3xl font-black">{verifications.filter((item) => item.status !== "proof_received" && item.status !== "verified").length}</p>
         </div>
       </section>
       {verifications[0] && (

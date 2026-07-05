@@ -6,6 +6,7 @@ import { createProofSignal } from "@/lib/agents/proof-agent";
 import { getSafeTxlineStatus } from "@/lib/txline/auth";
 import { getScoreStatValidation } from "@/lib/txline/client";
 import { checkRateLimit } from "@/lib/security/rate-limit";
+import { requireOperatorKey } from "@/lib/security/operator-guard";
 
 const BodySchema = z.object({
   fixtureId: z.string().min(1).max(120),
@@ -16,6 +17,9 @@ const BodySchema = z.object({
 
 export async function POST(request: Request) {
   try {
+    const unauthorized = requireOperatorKey(request);
+    if (unauthorized) return unauthorized;
+
     const limited = checkRateLimit(request, "verify-score-stat", { limit: 20, windowMs: 60_000 });
     if (limited) return limited;
 
@@ -31,7 +35,7 @@ export async function POST(request: Request) {
           error: "TxLINE credentials are not configured. Demo mode remains available.",
         };
 
-    const status = validation.ok ? "verified" : canCallTxline ? "failed" : "unsupported";
+    const status = validation.ok ? "proof_received" : canCallTxline ? "failed" : "unsupported";
     const verification = await prisma.verificationResult.create({
       data: {
         fixtureId: body.fixtureId,
@@ -44,8 +48,12 @@ export async function POST(request: Request) {
         resultJson: JSON.stringify(
           {
             verified: validation.ok,
+            independentSolanaValidation: false,
             source: validation.endpoint,
             demoFallback: !canCallTxline,
+            note: validation.ok
+              ? "TxLINE stat-validation proof response was received. Independent local/on-chain validation is not implemented in this MVP."
+              : "No TxLINE proof response was received.",
           },
           null,
           2,
@@ -57,9 +65,9 @@ export async function POST(request: Request) {
     await prisma.auditLog.create({
       data: {
         level: validation.ok ? "info" : "warning",
-        eventType: validation.ok ? "verification_passed" : "verification_failed",
+        eventType: validation.ok ? "proof_response_received" : "verification_failed",
         message: validation.ok
-          ? `Score/stat validation passed for fixture ${body.fixtureId}.`
+          ? `TxLINE score/stat proof response received for fixture ${body.fixtureId}.`
           : `Score/stat validation did not complete for fixture ${body.fixtureId}.`,
         fixtureId: body.fixtureId,
         metadataJson: JSON.stringify({ verificationId: verification.id, status }, null, 2),

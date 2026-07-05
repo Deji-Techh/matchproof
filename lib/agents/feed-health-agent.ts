@@ -17,7 +17,8 @@ export function runFeedHealthAgent(updates: AgentUpdate[]): AgentSignal[] {
     }
 
     if (update.sequence) {
-      const previous = seenSequences.get(update.sequence);
+      const sequenceKey = `${update.fixtureId}:${update.sequence}`;
+      const previous = seenSequences.get(sequenceKey);
       if (previous) {
         signals.push(
           makeSignal(update, "low", "Duplicate score update detected", "The same fixture sequence was received more than once.", {
@@ -27,7 +28,7 @@ export function runFeedHealthAgent(updates: AgentUpdate[]): AgentSignal[] {
           }),
         );
       } else {
-        seenSequences.set(update.sequence, update);
+        seenSequences.set(sequenceKey, update);
       }
     }
 

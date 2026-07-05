@@ -3,11 +3,15 @@ import { z } from "zod";
 import { prisma } from "@/lib/db/prisma";
 import { ensureDemoData } from "@/lib/db/demo-seed";
 import { checkRateLimit } from "@/lib/security/rate-limit";
+import { requireOperatorKey } from "@/lib/security/operator-guard";
 
 const ParamsSchema = z.object({ id: z.string().min(1).max(160) });
 
 export async function POST(_request: Request, { params }: { params: Promise<{ id: string }> }) {
   try {
+    const unauthorized = requireOperatorKey(_request);
+    if (unauthorized) return unauthorized;
+
     const limited = checkRateLimit(_request, "signal-acknowledge", { limit: 60, windowMs: 60_000 });
     if (limited) return limited;
 
