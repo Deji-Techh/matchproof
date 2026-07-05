@@ -23,12 +23,12 @@ export async function TopStatusBar() {
   const hasCredentials = txline.hasGuestJwt && txline.hasApiToken;
 
   return (
-    <header className="sticky top-0 z-30 border-b border-[var(--border-subtle)] bg-[var(--bg-panel)]">
+    <header className="fixed inset-x-0 top-0 z-40 border-b border-[var(--border-subtle)] bg-[var(--bg-panel)]">
       <MatchTicker fixtures={fixtures} />
       <div className="flex min-h-16 items-center justify-between gap-3 px-3 sm:px-4">
         <Link href="/" className="flex min-w-0 items-center gap-3">
           <span className="grid h-10 w-10 shrink-0 place-items-center overflow-hidden">
-            <Image src="/icon.png" alt="MatchProof" width={36} height={36} className="h-9 w-9 object-contain" priority />
+            <Image src="/brand/matchproof-mark.png" alt="MatchProof" width={36} height={36} className="h-9 w-9 object-contain" priority />
           </span>
           <span>
             <span className="block text-base font-black uppercase leading-none tracking-normal">MatchProof</span>
